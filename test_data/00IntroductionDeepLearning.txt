@@ -1,0 +1,12 @@
+link: https://youtu.be/y6wHpRzhhkA?si=PsACR2hjIfZ_O4TQ&t=1583 (ein chapter)
+
+- aware of advanced applications of DL in scientific computing
+- familiar with design, implementation and theory of these algorithms
+- understand the pros and cons of using deep learning
+- understand key scientific machine learning concepts
+
+- lectures on friday, tutorials on tuesdays
+- next week: pytorch
+
+- only project assessments, no exams
+- 

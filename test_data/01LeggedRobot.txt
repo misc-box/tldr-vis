@@ -1,0 +1,6 @@
+link: https://youtu.be/5BkoGug8HhE?si=S_PtYFXCZ85lqdlo&t=511 (one chapter)
+
+- abstractation layer
+- robust motion execution in task space
+- implemented as ros action
+- (?)
