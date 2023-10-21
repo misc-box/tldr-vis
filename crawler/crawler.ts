@@ -76,7 +76,7 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
     // e.g. on podcasts there are `.mp4`
     if (links.length === 0) return null;
 
-    return { name: name, lecturer: lecturer, date: date, link: links[0].link, duration: moment.parse(selected['duration']).asMilliseconds() };
+    return { name: name, lecturer: lecturer, date: date, link: links[0].link, duration: moment.duration(selected['duration']).asMilliseconds() };
 }
 
 /// the question mark (`?`) seems to return all lectures
