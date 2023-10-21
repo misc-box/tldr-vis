@@ -7,15 +7,34 @@ import config from './config.js';
 
 async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
     // Definieren der Systemanweisung
+    let instruction = '';
+    switch (summaryLength) {
+        case 'short':
+            instruction = `Provide a SHORT summary of this lecture transcript, with bullet points but ONLY elaborating on
+            the most important and pressing content. 
+            Only include content you are sure of! Lecture transcript: `;
+            break;
+        case 'long':
+            instruction = `Provide a LONG AND DETAILED summary of this lecture transcript by defining key concepts, working with
+            bullet points to include AS MUCH RELEVANT INFORMATION AS POSSIBLE into the summary. 
+            Only include content you are sure of! Lecture transcript:`;
+            break;
+        case 'medium':
+            instruction = `Provide a medium-long summary of this lecture transcript with bullet points and short texts. 
+            Only include content you are sure of! Lecture transcript:`;
+            break;
+        default:
+            throw new Error('Invalid summary length');
+
+    }
     const systemInstruction = {
         role: "system",
-        content: "You are a knowledgeable assistant tasked with summarizing lectures. When provided with a lecture transcript, generate a clear and concise summary. If instructed to provide a long summary, include more details, key points, and explanations. If instructed to provide a short summary, offer a brief overview highlighting the main points. Format your response in a clear, readable manner."
+        content: instruction,
     };
-
     // Definieren der Benutzeranweisung
     const userInstruction = {
         role: "user",
-        content: `Provide a ${summaryLength} summary for the following lecture text: \n\n${text}`
+        content: text,
     };
 
     // Zusammenstellen der Nachrichten für den API-Aufruf
