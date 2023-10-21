@@ -5,7 +5,6 @@ async function testExtractTopics() {
         // Load the text from the transcription file
         const sampleText = await readTextFile('./test_data/transcription-123.txt');
 
-
         // Pass the loaded text to the extractTopics function
         const topics = await extractTopics(sampleText);
 

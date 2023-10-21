@@ -7,9 +7,9 @@ async function extractTopics(text, otherOptions = {}) {
         role: "system",
         content: `Extract and prioritize the main topics from the following lecture transcript. Start with the most important topic and work your way down.
         For each topic, provide a level of relevance (high, medium, low) based on the depth and frequency of coverage in the lecture, and also estimate the percentage of the lecture dedicated to each topic. The minimum percentage is 10% and the sum is 100%.
-        Additionally, identify the main sub-topics within each key topic. 
+        Additionally, identify the main sub-topics within each key topic. Additionally, provide the key hashtags for the lecture.
         For each key topic, provide an interesting additional question based on the lecture to help delve deeper into the material. 
-        Format the output as valid json, in the following structure: {"1": {"name": "topic 1", "priority": "relevance", "percentage": "XX%", "sub-topics": ["sub-topic A", "sub-topic B", ...], "question": "blabla"}, "2": {"name": "topic 2", "priority": "relevance", "percentage": "XX%",  "sub-topics": ["sub-topic A", "sub-topic B", ...], "question": "blabla"}, ...}. 
+        Format the output as valid json, in the following structure: {"hashtags": ["AI", "DotProduct", "LinearRegression"...], "1": {"name": "topic 1", "priority": "relevance", "percentage": "XX%", "sub-topics": ["sub-topic A", "sub-topic B", ...], "question": "blabla"}, "2": {"name": "topic 2", "priority": "relevance", "percentage": "XX%",  "sub-topics": ["sub-topic A", "sub-topic B", ...], "question": "blabla"}, ...}. 
         Take a deep breath and think carefully.
         Lecture transcript:
 
