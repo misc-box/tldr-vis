@@ -1,6 +1,8 @@
 <template>
-    <div class="w-full flex flex-col items-center gap-4 mt-8">
-        <h1 class="text-4xl opacity-50">┬┴┬┴┤(･_├┬┴┬┴</h1>
-        <span class="block opacity-50 font-semibold text-xl">No summaries found</span>
-    </div>
+    <div class="mt-6">
+        <div class="flex gap-2 flex-col sm:flex-row sm: justify-between my-6">
+            <Navbar />
+        </div>
+        <SummaryCard />
+    </div> 
 </template>
