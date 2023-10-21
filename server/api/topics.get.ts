@@ -3,22 +3,21 @@ import { serverSuperbaseClient } from '#supabase/server'
 export default defineEventHandler(async (event) => {
 
     const client = await serverSuperbaseClient(event)
-    const body = await readBody(event)
 
+    const body = await readBody(event)
     const user = await client.auth.user()
 
-    const {data: summary, error} = await client
-        .from('summaries')
+    // check if user is logged in and user_summary_id exists
+    const {data: found_topics, error_found_user_summaries} = await client
+        .from('topics')
         .select('*')
-        .eq('id', body.pathParameters.id)
-    
-    if(summary.length == 0){
+    if(error_found_user_summaries) {
         return {
-            statusCode: 404,
+            statusCode: 500,
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({'Summary not found'}),
+            body: JSON.stringify({message: 'Internal server error'}),
         }
     }
 
@@ -27,6 +26,7 @@ export default defineEventHandler(async (event) => {
         headers: {
             'content-type': 'application/json',
         },
-        body: JSON.stringify(summary),
+        body: JSON.stringify(found_topics),
     }
+    
   })

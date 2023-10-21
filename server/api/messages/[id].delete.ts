@@ -9,18 +9,18 @@ export default defineEventHandler(async (event) => {
 
     // check if user is logged in only then he is allowed to delete
     if(user) {
-        const {data: user_videos, error} = await client
-            .from('user_videos')
-            .select('video_id')
+        const {data: message, error} = await client
+            .from('message')
+            .select('message_id')
             .eq('user_id', user.id)
-            .eq('video_id', body.pathParameters.id)
+            .eq('message_id', body.pathParameters.id)
             .delete()
         return {
             statusCode: 200,
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify(user_videos),
+            body: JSON.stringify(user_summaries),
         }
     }
     else {

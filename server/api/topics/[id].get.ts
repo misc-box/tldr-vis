@@ -7,18 +7,18 @@ export default defineEventHandler(async (event) => {
 
     const user = await client.auth.user()
 
-    const {data: summary, error} = await client
-        .from('summaries')
+    const {data: topic, error} = await client
+        .from('topics')
         .select('*')
         .eq('id', body.pathParameters.id)
     
-    if(summary.length == 0){
+    if(topic.length == 0){
         return {
             statusCode: 404,
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({'Summary not found'}),
+            body: JSON.stringify({'Topic not found'}),
         }
     }
 
@@ -27,6 +27,6 @@ export default defineEventHandler(async (event) => {
         headers: {
             'content-type': 'application/json',
         },
-        body: JSON.stringify(summary),
+        body: JSON.stringify(topic),
     }
   })

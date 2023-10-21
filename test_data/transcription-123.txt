@@ -1,0 +1,92 @@
+I have to say it's an honor to be here, this is my first ever conference talk. I did not 
+imagine wearing a microphone and I did not imagine an auditorium, so I'm very, very 
+honored. As you can tell, I'm going to kind of guide you through, sort of giving you an 
+overview of who is a data journalist nowadays, what are the industry characteristics, 
+based on a survey or two that I've carried out. Just briefly about me, I'm a PhD 
+candidate at the Surrey Institute for People-Centered Artificial Intelligence. My focus 
+there is really news deserts, and the research that I'm talking about today instead 
+comes from work I've done while at the European Journalism Center, previously to 
+starting my PhD. Aside from that, I've also worked as a data journalist at the Sheldon 
+Studio, which is an information design studio in Italy, they do really cool projects, so if 
+you haven't heard about them, I recommend checking them out. So without further ado, 
+let's introduce the survey. The survey is called the State of Data Journalism. I don't 
+know if many of you have come across this survey before, it's by datajournalism.com, 
+which is a child project of the European Journalism Center, which is a non-profit that 
+aims to deliver funding and training to journalists worldwide. The child project, 
+datajournalism.com, is kind of a community gatherer for people interested in data 
+journalism, and two years ago when I joined them, there was this kind of desire to 
+create a survey that would kind of measure what's happening, give us an overview of 
+this growing field. At the time, this was also felt like it was exacerbated by the pandemic, 
+that it put data journalism into the spotlight, and yeah, and also we felt there was 
+generally a lack of global large sample-based survey studies. There are survey studies 
+about data journalism, but perhaps they tend to focus on small regions, and also they 
+tend to stick within academia, so we wanted to do something that we could spread kind 
+of to a global community. I think an advantage for us at data journalism to be able to do 
+that was the fact that datajournalism.com has an amazing network of established 
+names in the community that have contributed onto the podcast that we have, and 
+written long reads for us, or contributed chapters to the handbook of data journalism, 
+and then also that a lot of newcomers to the field, or people interested in the field, 
+perhaps students, use datajournalism.com as a sort of learning platform and a means 
+to kind of know what's happening in the community. And yeah, ultimately a desire to 
+repeat this effort over time, and then be able to capture sort of over time trends. So this 
+is kind of an overview of the survey. The banner at the top should have 2021 and 2022, 
+that's the two editions, and the third one should say comparative elements, just for 
+reference. So you can see the sample is quite large for the two surveys. The numbers in 
+the brackets indicate who we actually ended up using in the analysis, and the number 
+next to it is who took the survey. We ended up discarding some participants due to 
+incomplete submissions, or some people somehow filing the survey twice or three 
+times. We are grateful for their time, but we only wanted one questionnaire. And when it 
+came to the question, it was a really lengthy questionnaire, because when you try to 
+measure the field as a whole, there are so many things to kind of take into account, and 
+these are the sections that we included. In the second edition of the survey, we wanted 
+to add some questions about the Russia-Ukraine coverage. Specifically, it meant, for 
+kind of trying to keep the questionnaire short, that we took away some questions from 
+other sections. So when you look at the two surveys, there are sort of 50 questions that 
+you could compare longitudinally. And when it comes to the people in the survey, we put 
+a question in the second edition of saying, did you take the survey last year? And 411 
+people replied that they had. When I kind of wanted to match the same person between 
+the two survey editions, I was able to do that myself only for 302 individuals. In terms of 
+impact, the survey has been each edition kind of the subject of a panel discussion at 
+the International Journalism Festival in Perugia, and then a journal article written by 
+myself and a few colleagues came out in February 2023 about the first survey. So this 
+is really the first time that we look at the two in perspective and in relation to each other. 
+So there are kind of two approaches I think we can adopt when it comes to longitudinal 
+analysis. The first one is kind of assuming that the sampling strategy was good and 
+representative enough that you can just compare the results from the first survey to the 
+one of the second survey. And I think it's a good method to capture overall trends. And 
+the second one is kind of what I was mentioning earlier of finding the same individual 
+between the two surveys and say, okay, people replied A in 2021, but then they went on 
+to reply B in 2022 and observe this kind of within individual changes. So I'm going to 
+kind of give you an overview of the overall trends to begin with. The spoiler alert is that 
+things were very consistent across the two editions. For me it was also comforting as a 
+sort of sampling methodology. I feel like we kind of got a good substantial sample, that 
+our answers were very stable. Nonetheless, a few developments were standing out. So 
+starting off with the demographics, the first thing that we noticed across both editions 
+was that the majority of people in the field are male. There were two out of five were 
+women. This was very much the same in the two editions and it also kind of mimics 
+previous findings by none other, my supervisors, Bahari and Haravi did a previous 
+survey and found the same. However, women are younger and they're mostly in 
+education, like a greater share of them is in education than men. So perhaps this is 
+something that is going to change over the years. They're also geographically unevenly 
+distributed. There is no legend there, but I can tell you that the US had the highest 
+share and that's around 11% of all of the respondents. And then we had Italy and the 
+UK following, Germany and Spain, we were from something like between 5% and 9%. 
+And despite this being the fact, actually a little note about that, I feel perhaps many 
+believe that data journalism is concentrated in countries where there are better 
+resources, like organisations with better resources. But to me it was also maybe, I kind 
+of put a question mark there because I think it's just harder to reach populations in 
+areas where maybe data journalism doesn't have such a long tradition or where there 
+are linguistical barriers in terms of reaching them. But nonetheless, we've seen some 
+changes between the two editions. And the main one was that countries in Africa and 
+Asia were rapidly growing at a faster pace than the countries in Europe or in North 
+America, namely India and Nigeria actually entered the top five, they were sharing the 
+fifth place in terms of the number of data journalists that they have, that they work 
+there, whereas in 2021 the top five was just Western countries. So I think that's 
+something to keep an eye out for. When it comes to employment, there's a bit of a 
+gender gap in terms of leadership positions. When we surveyed, when we put out the 
+survey, we asked people to kind of categorise themselves, whether they were full-time 
+employees or if they were part-timers, if they were students, if they were trainers and 
+educators. And when it came to team leads and editors, we saw that there were less 
+women than men overall. And then generally as an industry, most people tend not to 
+have been in it for a long time, over three out of five had under five years of experience. 
+And another remarkable fact I thought was the fact that over one in three, if I remember 
