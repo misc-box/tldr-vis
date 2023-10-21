@@ -23,12 +23,14 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
 
         // mock to save api calls
         if (!mock) {
+            // TODO: Check if video link is valid
+            // TODO: Check if video was already processed
             const audioPath = await convertVideoToMp3(videoUrl, `audio-${timestamp}`);
 
-            // log time needed to convert video to audio
+
             console.log('Needed time in seconds to convert video to audio:', (Date.now() - current) / 1000);
             current = Date.now();
-
+            
             transcription = await transcribeAudio(audioPath);
             console.log('Needed time in seconds to transcribe audio:', (Date.now() - current) / 1000);
             current = Date.now();
