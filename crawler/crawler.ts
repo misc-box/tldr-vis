@@ -41,6 +41,8 @@ async function get_lecture_links_by_query_offset(query: string, offset: Number =
 
 type Lecture = { name: string, date: Date, lecturer: string, link: URL, other_ids: string[] };
 
+/// path should be the path of the url in the url box (without the base) or the whole url
+///
 /// sends cookie if given, some lectures are 'protected'
 async function video_link_by_lecture_id(path: string, cookies?: string): Promise<Lecture> {
     let id = '0'; //can be anything as long as not an empty string
