@@ -1,0 +1,11 @@
+{
+    "name": "crawler",
+    "version": "1.0.0",
+    "description": "",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "node-fetch": "^3.3.2"
+    }
+}
