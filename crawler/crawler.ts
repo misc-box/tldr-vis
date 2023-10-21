@@ -70,7 +70,7 @@ async function video_link_by_lecture_id(path: string, cookies?: string): Promise
 }
 
 async function main() {
-    console.log(await video_link_by_lecture_id((await get_lecture_links('probabilistic artificial'))[2], await get_token(process.env.USERNAME, process.env.PASSWORD)));
+    console.log(await video_link_by_lecture_id((await get_lecture_links('probabilistic artificial'))[2], await get_token(process.env.ETH_USERNAME, process.env.ETH_PASSWORD)));
 }
 
 Promise.resolve(main());
