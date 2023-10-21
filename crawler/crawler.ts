@@ -53,9 +53,8 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
     try {
         json = await res.json();
     } catch (e) {
-        console.error(e);
-        console.error(path);
-        console.error(await res.text());
+        // "invalid" lecture (html doesn't exist too, e. g. /lectures/d-math/2019/autumn/401-0261-g0l/0c1c661c-bbf4-4899-9c40-7aa1e2483c5b.html)
+        return null;
     }
 
     if (json['protection'] === 'PWD' || !json['authorized']) {
@@ -73,6 +72,7 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
     links.sort((v1, v2) => v1.resolution - v2.resolution);
     let other_ids = json['episodes'].map((e: { id: string }) => e.id);
 
+    // e.g. on podcasts there are `.mp4`
     if (links.length === 0) return null;
 
     return { name: name, lecturer: lecturer, date: date, link: links[0].link, other_ids: other_ids };
