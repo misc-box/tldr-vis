@@ -1,4 +1,5 @@
 import { serverSuperbaseClient } from '#supabase/server'
+import { processVideo } from '../src/processVideo'
 
 export default defineEventHandler(async (event) => {
 
@@ -71,8 +72,7 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    //const summary_path = await get_summary_from_video_url(video_url) 
-    const summary_path = "test_path"
+    const {pdfPath: summary_path} = await processVideo(video_url) 
 
     // insert summary
     await client.from('summaries').insert([
