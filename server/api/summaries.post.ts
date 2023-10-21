@@ -71,7 +71,6 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    //TODO:
     //const summary_path = await get_summary_from_video_url(video_url) 
     const summary_path = "test_path"
 

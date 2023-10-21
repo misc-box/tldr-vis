@@ -8,9 +8,9 @@ export default defineEventHandler(async (event) => {
 
     // check if user is logged in then only return his videos
     if(user) {
-        const {data: user_videos, error} = await client
-            .from('user_videos')
-            .select('video_id')
+        const {data: user_summaries, error} = await client
+            .from('user_summaries')
+            .select('summary_id')
             .eq('user_id', user.id)
         return {
             statusCode: 200,
@@ -22,14 +22,14 @@ export default defineEventHandler(async (event) => {
     }
 
     //otherwise return all videos
-    const {data: videos, error} = await client
-        .from('videos')
+    const {data: summaries, error} = await client
+        .from('summeries')
         .select('id')
     return {
         statusCode: 200,
         headers: {
             'content-type': 'application/json',
         },
-        body: JSON.stringify(videos),
+        body: JSON.stringify(summaries),
     }
   })
