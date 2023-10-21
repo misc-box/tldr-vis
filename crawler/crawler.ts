@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const { parse } = require('node-html-parser');
 const fs = require('fs');
+const ffprobe = require('ffprobe-client');
 const moment = require('moment');
 
 const BASE_URL = 'https://video.ethz.ch/';
@@ -113,7 +114,17 @@ async function get_lecture_links_by_query(query: string): Promise<string[]> {
 
     return links;
 }
+
+async function get_duration_by_url(url: URL): Promise<Number> {
+    let data = await ffprobe(url);
+
+    return Math.floor(data.duration);
+}
+
 async function main() {
+    console.log(await get_duration_by_url(new URL('https://oc-vp-distribution04.ethz.ch/mh_default_org/oaipmh-mmp/505426e2-1e97-43b4-967b-befdc8fb6a2f/3cddec95-ba1f-4e34-b454-e9b1632a1025/presentation_6b6f9489_bb69_4f38_9e07_77dc2535e370.mp4')));
+    return;
+
     console.time();
     // let links = await get_lecture_links_by_query('?');
     // let links = [

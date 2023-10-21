@@ -7,7 +7,12 @@
     "license": "ISC",
     "dependencies": {
         "dotenv": "^16.3.1",
+        "ffprobe-client": "^1.1.6",
         "moment": "^2.29.4",
         "node-fetch": "^3.3.2"
+    },
+    "devDependencies": {
+        "@types/node": "^20.8.7",
+        "tslib": "^2.6.2"
     }
 }
