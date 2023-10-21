@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
                 headers: {
                     'content-type': 'application/json',
                 },
-                body: JSON.stringify({'Suggested question not found'}),
+                body: JSON.stringify('Suggested question not found'),
             }
         }
 
@@ -41,11 +41,12 @@ export default defineEventHandler(async (event) => {
   })
 
 async function handleSuggestedQuestionRetrieval(client: serverSuperbaseClient, body: any) {
-    const {data: suggested_question, error} = await client
+    const {data: suggestedQuestion, error} = await client
         .from('suggested_questions')
         .select('*')
         .eq('id', body.pathParameters.id)
     if(error) {
         throw new Error('handleSuggestedQuestionRetrieval() error ' + error)
     }
-    return suggested_question
+    return suggestedQuestion
+}

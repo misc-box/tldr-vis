@@ -7,12 +7,12 @@ export default defineEventHandler(async (event) => {
         const client = await serverSuperbaseClient(event)
 
         const body = await readBody(event)
-        const {video_id: videoId, length} = JSON.parse(body)
+        const {video_id: videoId, length, type} = JSON.parse(body)
         const user = await client.auth.user()
 
         // check if summary already exists
         let summary: object
-        summary = await handleExistingSummary(client, videoId, length, user)
+        summary = await handleExistingSummary(client, videoId, length, type, user)
         if(!summary) {
             const existingVideo = await handleExistingVideo(client, videoId, user)
             if(!existingVideo) {
@@ -25,11 +25,11 @@ export default defineEventHandler(async (event) => {
                 }
             }
             await handleUserVideoInsert(client, videoId, user)
-            const summary = await handleSummaryInsert(client, videoId, length, user)
+            const summary = await handleSummaryInsert(client, videoId, length, type, user)
             await handleUserSummaryInsert(client, summary.id, user)
             processVideo(existingVideo.video_url) 
-            //TODO: await handleSummaryTopicInsert(client, insertedSummary.id, user, videoTopics)
-            //TODO: await hanldeSuggestedQuestionInsert(client, insertedSummary.id, suggestedQuestions)
+            //await handleSummaryTopicInsert(client, insertedSummary.id, user, videoTopics)
+            //await hanldeSuggestedQuestionInsert(client, insertedSummary.id, suggestedQuestions)
         }
         return {
             statusCode: 200,
@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
   })
 
 
-async function handleExistingSummary(client: serverSuperbaseClient, videoId: number, length: number, user: any) {
+async function handleExistingSummary(client: serverSuperbaseClient, videoId: number, length: number, type: string, user: any) {
 
     const {data: foundSummaries, error} = await client
         .from('summaries')
@@ -121,7 +121,7 @@ async function handleUserVideoInsert(client: serverSuperbaseClient, videoId: num
 }
 
 
-async function handleSummaryInsert(client: serverSuperbaseClient, videoId: number, length: number, user: any) {
+async function handleSummaryInsert(client: serverSuperbaseClient, videoId: number, length: number, type: string, user: any) {
     
 
     await client.from('summaries').insert([

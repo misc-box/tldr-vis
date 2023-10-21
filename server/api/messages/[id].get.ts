@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
                 headers: {
                     'content-type': 'application/json',
                 },
-                body: JSON.stringify({'Message not found'}),
+                body: JSON.stringify('Message not found'),
             }
         }
 
