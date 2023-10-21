@@ -39,8 +39,6 @@
             to="/explore"
         />
     </div>
-    <pre></pre>
-    <pre>{{ summaryData }}</pre>
 </template>
 
 <script setup lang="ts">
@@ -49,19 +47,8 @@ const selectedLength = ref(summaryLengthOptions[0]);
 
 const videoUrl = ref("");
 
-const summaryData = ref({});
-
+const emit = defineEmits(["summarize"]);
 const submit = async () => {
-    const { data, pending } = await useFetch("/api/process", {
-        method: "POST",
-        body: JSON.stringify({
-            videoUrl: videoUrl.value,
-            length: selectedLength.value.toLowerCase(),
-        }),
-    });
-
-    console.log(data)
-
-    summaryData.value = data;
+    emit("summarize", { videoUrl: videoUrl.value, length: selectedLength.value.toLowerCase() })
 };
 </script>

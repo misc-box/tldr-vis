@@ -53,7 +53,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
         }
 
         const summary = await summarizeTranscription(transcription, length);
-        const pdfSummary = saveSummaryToPDF(summary, `${outputFolder}/summary-${timestamp}`);
+        const pdfSummary = await saveSummaryToPDF(summary, `${outputFolder}/summary-${timestamp}`);
         console.log('Needed time in seconds to summarize transcription:', (Date.now() - current) / 1000);
         current = Date.now();
 

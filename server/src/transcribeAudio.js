@@ -1,6 +1,5 @@
-
-
 import fetch from 'node-fetch';
+import axios from "axios";
 
 import FormData from 'form-data';
 import fs from 'fs';
@@ -22,15 +21,14 @@ async function sendToWhisper(audioPath) {
 
     console.log(formData)
 
-    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-        method: 'POST',
+    const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
         headers: {
             'Authorization': `Bearer ${OPENAI_API_KEY}`,
+            ...formData.getHeaders(),
         },
-        body: formData
     });
 
-    const data = await response.json();
+    const data = await response.data;
     console.log(data);
 
     return data.text;

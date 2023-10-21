@@ -1,5 +1,5 @@
 <template>
-    <UContainer class="max-w-xl">
+    <UContainer class="max-w-2xl">
         <NuxtPage />
     </UContainer>
 </template>
