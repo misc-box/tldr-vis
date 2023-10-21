@@ -54,6 +54,7 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
         json = await res.json();
     } catch (e) {
         console.error(e);
+        console.error(video_url);
         console.error(await res.text());
     }
 
