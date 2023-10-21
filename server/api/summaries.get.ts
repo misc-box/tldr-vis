@@ -10,21 +10,23 @@ export default defineEventHandler(async (event) => {
     if(user) {
         const {data: user_summaries, error} = await client
             .from('user_summaries')
-            .select('summary_id')
+            .select('summaries.params')
             .eq('user_id', user.id)
+            .join('summaries', {'summaries.id': 'user_summaries.summary_id'})
         return {
             statusCode: 200,
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify(user_videos),
+            //TODO: return only summaries
+            body: JSON.stringify(user_summaries),
         }
     }
 
     //otherwise return all videos
     const {data: summaries, error} = await client
         .from('summeries')
-        .select('id')
+        .select('*')
     return {
         statusCode: 200,
         headers: {
