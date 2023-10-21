@@ -10,25 +10,31 @@ import readTextFile from './readTextFile.js';
 import summarizeTranscription from './summarizeTranscription.js';
 import transcribeAudio from './transcribeAudio.js';
 import writeTextFile from './writeTextFile.js';
-async function processVideo(videoUrl, length = 'short') {
+async function processVideo(videoUrl, length = 'short', mock = false) {
     try {
         // timestamp
         const timestamp = Date.now();
+        let current = timestamp;
         const outputFolder = './server/output';
         if (!fs.existsSync(outputFolder)) {
             fs.mkdirSync(outputFolder);
         }
-        // mock to save api calls
-        const mock = false;
         let transcription, outputTranscription;
+
+        // mock to save api calls
         if (!mock) {
             const audioPath = await convertVideoToMp3(videoUrl, `audio-${timestamp}`);
+
+            // log time needed to convert video to audio
+            console.log('Needed time in seconds to convert video to audio:', (Date.now() - current) / 1000);
+            current = Date.now();
+
             transcription = await transcribeAudio(audioPath);
+            console.log('Needed time in seconds to transcribe audio:', (Date.now() - current) / 1000);
+            current = Date.now();
 
             // delete audio file    
             try {
-
-                // delete audio file
                 await fs.promises.unlink(audioPath);
             } catch (error) {
                 console.error('Error in processing video:', error.message);
@@ -46,10 +52,16 @@ async function processVideo(videoUrl, length = 'short') {
 
         const summary = await summarizeTranscription(transcription, length);
         const pdfSummary = saveSummaryToPDF(summary, `${outputFolder}/summary-${timestamp}`);
+        console.log('Needed time in seconds to summarize transcription:', (Date.now() - current) / 1000);
+        current = Date.now();
 
         // extract topics
         const topics = await extractTopics(transcription);
+        console.log('Needed time in seconds to extract topics:', (Date.now() - current) / 1000);
+        current = Date.now();
 
+        // Log the needed time in seconds to the console
+        console.log('Needed time in seconds to process video:', (Date.now() - timestamp) / 1000);
         // Log the extracted topics to the console
         return { pdfPath: pdfSummary, transcriptionPath: outputTranscription, topics: topics }
     } catch (error) {
