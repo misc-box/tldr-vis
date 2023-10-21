@@ -16,19 +16,25 @@ async function processVideo(videoUrl, length = 'short') {
         if (!fs.existsSync(outputFolder)) {
             fs.mkdirSync(outputFolder);
         }
+        // mock to save api calls
+        const mock = true;
+        let transcription, outputTranscription;
+        if (!mock) {
+            const audioPath = await convertVideoToMp3(videoUrl, `audio-${timestamp}`);
+            transcription = await transcribeAudio(audioPath);
 
-        //const audioPath = await convertVideoToMp3(videoUrl, `audio-${timestamp}`);
-        //const transcription = await transcribeAudio(audioPath);
+            // delete audio file    
+            await fs.unlink(audioPath);
 
-        // delete audio file    
-        //await fs.unlink(audioPath);
+            outputTranscription = `${outputFolder}/transcription-${timestamp}.txt`;
+            await writeTextFile(outputTranscription, transcription);
 
-
-        // read sample transcription file to save api calls
-        const transcribtFile = `./test_data/transcription-123.txt`;
-        const transcription = await readTextFile(`${transcribtFile}`);
-        const outputTranscription = `${outputFolder}/transcription-${timestamp}.txt`;
-        await writeTextFile(outputTranscription, transcription);
+        } else {
+            console.log('Using mock data');
+            // read sample transcription file to save api calls
+            outputTranscription = `./test_data/transcription-123.txt`;
+            transcription = await readTextFile(`${outputTranscription}`);
+        }
 
         const summary = await summarizeTranscription(transcription, length);
         const pdfSummary = saveSummaryToPDF(summary, `${outputFolder}/summary-${timestamp}`);
