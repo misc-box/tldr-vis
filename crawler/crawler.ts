@@ -46,7 +46,7 @@ type Lecture = { name: string, date: Date, lecturer: string, link: URL, duration
 /// path should be the path of the url in the url box (without the base) or the whole url
 ///
 /// sends cookie if given, some lectures are 'protected'
-async function get_video_link_by_lecture_id(path: string, cookies?: string): Promise<Lecture> {
+async function get_lecture_by_url(path: string, cookies?: string): Promise<Lecture> {
     const path_prefix = path.split('.').slice(0, -1).join('.');
     const video_url = new URL(`${path_prefix}.series-metadata.json`, BASE_URL);
 
@@ -76,7 +76,7 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
     // e.g. on podcasts there are `.mp4`
     if (links.length === 0) return null;
 
-    return { name: name, lecturer: lecturer, date: date, link: links[0].link, duration: moment.duration(selected.duration).asMilliseconds() };
+    return { name: name, lecturer: lecturer, date: date, link: links[0].link, duration: Math.floor(moment.duration(selected.duration).asMilliseconds() / 1000) };
 }
 
 /// the question mark (`?`) seems to return all lectures
@@ -148,7 +148,7 @@ async function main() {
     let left = links.length - video_links.length;
     console.log('Total: ' + left);
     while (left > 0) {
-        processes.push(get_video_link_by_lecture_id(links.at(-left), cookies));
+        processes.push(get_lecture_by_url(links.at(-left), cookies));
 
         left--;
 

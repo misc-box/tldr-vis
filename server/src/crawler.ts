@@ -1,12 +1,13 @@
 import ffprobe from 'ffprobe';
 import { path as ffprobe_path } from '@ffprobe-installer/ffprobe';
+import { duration } from 'moment';
 
 const BASE_URL = 'https://video.ethz.ch/';
 
 export async function get_duration_by_url(url: URL): Promise<number> {
     const data = await ffprobe(url, {path: ffprobe_path});
 
-    return Math.floor(parseFloor(data.streams[0].duration) / 60 / 1000);
+    return parseInt(data.streams[0].duration);
 }
 
 export type Lecture = { name: string, date: Date, lecturer: string, link: URL, duration: number };
@@ -14,7 +15,7 @@ export type Lecture = { name: string, date: Date, lecturer: string, link: URL, d
 /// path should be the path of the url in the url box (without the base) or the whole url
 ///
 /// sends cookie if given, some lectures are 'protected'
-export async function get_video_link_by_lecture_id(path: string, cookies?: string): Promise<Lecture> {
+export async function get_lecture_by_url(path: string, cookies?: string): Promise<Lecture> {
     const path_prefix = path.split('.').slice(0, -1).join('.');
     const video_url = new URL(`${path_prefix}.series-metadata.json`, BASE_URL);
 
@@ -50,7 +51,7 @@ export async function get_video_link_by_lecture_id(path: string, cookies?: strin
         lecturer,
         date,
         link: links[0].link,
-        duration: Math.floor(moment.duration(selected.duration).asMilliseconds() * 1000)
+        duration: Math.floor(duration(selected.duration).asMilliseconds() / 1000)
     };
 }
 
