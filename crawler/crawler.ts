@@ -129,6 +129,12 @@ async function main() {
     if (process.env.ETH_USERNAME === undefined || process.env.ETH_PASSWORD === undefined) console.warn('No credentials, only downloading unprotected videos.');
     let cookies = await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD);
 
+    // video_links.sort((a, b) => a.duration - b.duration);
+
+    // fs.writeFileSync('video-links.json', JSON.stringify(video_links.filter(l => l !== null)));
+
+    // throw '';
+
     let left = links.length - video_links.length;
     console.log('Total: ' + left);
     while (left > 0) {
@@ -148,6 +154,7 @@ async function main() {
     }
     // let videos = await Promise.all(links.map(async l => await video_link_by_lecture_id(l, await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD))));
     console.timeEnd();
+    video_links.sort((a, b) => a.duration - b.duration);
     fs.writeFileSync('video-links.json', JSON.stringify(video_links.filter(l => l !== null)));
 }
 
