@@ -1,6 +1,8 @@
 import FuzzySet from 'fuzzyset.js';
 import fetch from 'node-fetch';
-import config from './config.js';
+
+const { OPENAI_API_KEY } = useRuntimeConfig();
+
 async function extractTopics(text, otherOptions = {}) {
     // Define system instruction
     const systemInstruction = {
@@ -40,7 +42,7 @@ async function extractTopics(text, otherOptions = {}) {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${config.OPENAI_API_KEY}`,
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
