@@ -4,9 +4,8 @@ import fetch from 'node-fetch';
 
 import FormData from 'form-data';
 import fs from 'fs';
-import config from './config.js';
 
-
+const { OPENAI_API_KEY } = useRuntimeConfig();
 
 async function sendToWhisper(audioPath) {
     const formData = new FormData();
@@ -21,10 +20,12 @@ async function sendToWhisper(audioPath) {
     const length = stats.size / 32000;
     console.log('File length in seconds:', length);
 
+    console.log(formData)
+
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${config.OPENAI_API_KEY}`,
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
         },
         body: formData
     });

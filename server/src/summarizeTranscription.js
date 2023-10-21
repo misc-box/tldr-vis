@@ -1,9 +1,7 @@
 
 import fetch from 'node-fetch';
 
-import config from './config.js';
-
-
+const { OPENAI_API_KEY } = useRuntimeConfig();
 
 async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
     // Definieren der Systemanweisung
@@ -57,7 +55,7 @@ async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${config.OPENAI_API_KEY}`,
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({

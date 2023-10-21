@@ -6,7 +6,9 @@ export default defineNuxtConfig({
         "Red Hat Display": [300, 400, 500, 600, 700],
     },
     app: {
-        pageTransition: { name: 'page', mode: 'out-in' }
+        pageTransition: { name: 'page', mode: 'out-in' },
     },
-
+    runtimeConfig: {
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    }
 });
