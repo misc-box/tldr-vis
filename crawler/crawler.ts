@@ -70,7 +70,7 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
     let lecturer = selected.createdBy.join(', ');
     let date = new Date(selected.createdAt);
     let presentations: { height: number, width: number, type: string, url: string }[] = selected.media.presentations ?? selected.media.presenters;
-    let links = presentations.filter(p => p.type === 'video/mp4').map(p => ({ resolution: p.width * p.height, link: new URL(p.url) }));
+    let links = presentations.filter(p => ['video/mp4'].includes(p.type)).map(p => ({ resolution: p.width * p.height, link: new URL(p.url) }));
     links.sort((v1, v2) => v1.resolution - v2.resolution);
 
     // e.g. on podcasts there are `.mp4`
