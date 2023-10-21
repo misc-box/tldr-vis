@@ -118,7 +118,7 @@ async function get_lecture_links_by_query(query: string): Promise<string[]> {
 async function get_duration_by_url(url: URL): Promise<number> {
     let data = await ffprobe(url);
     console.log(data);
-    return data.duration;
+    return data.format.duration;
 }
 
 async function main() {
