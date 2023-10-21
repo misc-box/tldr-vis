@@ -48,12 +48,13 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
     let id = '0'; //can be anything as long as not an empty string
     let path_prefix = path.split('/').slice(0, -1).join('/');
     let video_url = new URL(`${path_prefix}/${id}.series-metadata.json`, BASE_URL);
+    let res = await fetch(video_url, { headers: { cookie: cookies } });
     let json;
     try {
-        let res = await fetch(video_url, { headers: { cookie: cookies } });
         json = await res.json();
     } catch (e) {
         console.error(e);
+        console.error(await res.text());
     }
 
     if (json['protection'] === 'PWD' || !json['authorized']) {
