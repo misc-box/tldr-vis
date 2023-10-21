@@ -15,12 +15,12 @@ function sleep(seconds) {
 
 async function stream2buffer(stream: Stream): Promise<Buffer> {
 
-    return new Promise < Buffer > ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         
-        const _buf = Array < any > ();
+        let buffer = [];
 
-        stream.on("data", chunk => _buf.push(chunk));
-        stream.on("end", () => resolve(Buffer.concat(_buf)));
+        stream.on("data", chunk => buffer.push(chunk));
+        stream.on("end", () => resolve(Buffer.concat(buffer)));
         stream.on("error", err => reject(`error converting stream - ${err}`));
 
     });
@@ -34,15 +34,13 @@ export default defineEventHandler(async event => {
 
     console.log(result.pdfPath);
     
-    const summaryBuffer = fs.readFileSync(result.pdfPath);
+    const summaryBuffer = await fs.readFile(result.pdfPath);
 
-    const transcriptTextBuffer = fs.readFileSync(result.transcriptionPath, 'utf-8');
+    const transcriptTextBuffer = await fs.readFile(result.transcriptionPath, 'utf-8');
 
     await saveAsPDF(transcriptTextBuffer, result.transcriptionPath + "-tmp")
 
-    const transcriptBuffer = fs.readFileSync(path.resolve(result.transcriptionPath + "-tmp.pdf"));
-
-    console.log('Boeffeur')
+    const transcriptBuffer = await fs.readFile(path.resolve(result.transcriptionPath + "-tmp.pdf"));
 
     const newRes = {
         ...result,

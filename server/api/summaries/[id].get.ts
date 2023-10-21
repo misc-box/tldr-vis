@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({'Summary not found'}),
+            body: {message: 'Summary not found'},
         }
     }
 
@@ -27,6 +27,6 @@ export default defineEventHandler(async (event) => {
         headers: {
             'content-type': 'application/json',
         },
-        body: JSON.stringify(summary),
+        body: summary,
     }
   })

@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({message: 'Unauthorized'}),
+            body: {message: 'Unauthorized'},
         }
     }
     const {data: found_messages, error_found_user_summaries} = await client
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({message: 'Internal server error'}),
+            body: {message: 'Internal server error'},
         }
     }
 
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
         headers: {
             'content-type': 'application/json',
         },
-        body: JSON.stringify(found_messages),
+        body: found_messages,
     }
     
   })

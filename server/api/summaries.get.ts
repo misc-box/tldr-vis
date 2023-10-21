@@ -18,8 +18,8 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            //TODO: return only summaries
-            body: JSON.stringify(user_summaries),
+            //TODO: return only summaries ?
+            body: {message: user_summaries}
         }
     }
 
@@ -32,6 +32,6 @@ export default defineEventHandler(async (event) => {
         headers: {
             'content-type': 'application/json',
         },
-        body: JSON.stringify(summaries),
+        body: {message: summaries},
     }
   })

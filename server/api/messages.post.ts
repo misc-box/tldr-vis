@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({message: 'Unauthorized'}),
+            body: {message: 'Unauthorized'},
         }
     }
     const {data: found_user_summaries, error_found_user_summaries} = await client
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({message: 'User summary not found in database'}),
+            body: {message: 'User summary not found in database'},
         }
     }
 

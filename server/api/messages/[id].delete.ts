@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
     const user = await client.auth.user()
 
-    // check if user is logged in only then he is allowed to delete
+    // check if user is logged in, only then he is allowed to delete
     if(user) {
         const {data: message, error} = await client
             .from('message')
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify(user_summaries),
+            body: user_summaries,
         }
     }
     else {
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({message: 'Unauthorized'}),
+            body: {message: 'Unauthorized'},
         }
     }
   })

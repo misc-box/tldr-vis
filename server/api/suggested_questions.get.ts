@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({message: 'Internal server error'}),
+            body: {message: 'Internal server error'},
         }
     }
 
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
         headers: {
             'content-type': 'application/json',
         },
-        body: JSON.stringify(suggested_questions),
+        body: {message: suggested_questions},
     }
     
   })

@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({message: 'Unauthorized'}),
+            body: {message: 'Unauthorized'},
         }
     }
   })

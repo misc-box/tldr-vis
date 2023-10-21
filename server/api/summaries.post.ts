@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 // import { serverSuperbaseClient } from '#supabase/server'
-=======
-import { serverSuperbaseClient } from '#supabase/server'
-import { processVideo } from '../src/processVideo'
->>>>>>> 1367f8895599112433229d049e8cb7a8f06bb7dd
 
 // export default defineEventHandler(async (event) => {
 
@@ -76,13 +71,9 @@ import { processVideo } from '../src/processVideo'
 //         }
 //     }
 
-<<<<<<< HEAD
 //     //TODO:
 //     //const summary_path = await get_summary_from_video_url(video_url) 
 //     const summary_path = "test_path"
-=======
-    const {pdfPath: summary_path} = await processVideo(video_url) 
->>>>>>> 1367f8895599112433229d049e8cb7a8f06bb7dd
 
 //     // insert summary
 //     await client.from('summaries').insert([

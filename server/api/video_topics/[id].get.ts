@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({'Video topic not found'}),
+            body: JSON.stringify({message: 'Video topic not found'}),
         }
     }
 
@@ -26,6 +26,6 @@ export default defineEventHandler(async (event) => {
         headers: {
             'content-type': 'application/json',
         },
-        body: JSON.stringify(video_topic),
+        body: video_topic,
     }
   })

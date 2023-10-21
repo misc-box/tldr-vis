@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({'Suggested question not found'}),
+            body: {message: 'Suggested question not found'},
         }
     }
 
@@ -27,6 +27,6 @@ export default defineEventHandler(async (event) => {
         headers: {
             'content-type': 'application/json',
         },
-        body: JSON.stringify(suggested_question),
+        body: suggested_question,
     }
   })

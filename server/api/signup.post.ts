@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify("User already logged in"),
+            body: {message: 'User already logged in'},
         }
     }
     else {
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
                 headers: {
                     'content-type': 'application/json',
                 },
-                body: JSON.stringify(error),
+                body: error,
             }
         }
         else {
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
                 headers: {
                     'content-type': 'application/json',
                 },
-                body: JSON.stringify({ user, session }),
+                body: { user, session },
             }
         }
     }
