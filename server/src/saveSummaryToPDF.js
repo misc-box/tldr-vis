@@ -7,7 +7,8 @@ function saveAsPDF(text, name) {
     doc.text(text);
     // timestamp
 
-    const outputFilePath = `./server/output/${name}.pdf`;
+
+    const outputFilePath = `${name}.pdf`;
 
     doc.pipe(fs.createWriteStream(outputFilePath));
     doc.end();
