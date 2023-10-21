@@ -10,7 +10,7 @@ import readTextFile from './readTextFile.js';
 import summarizeTranscription from './summarizeTranscription.js';
 import transcribeAudio from './transcribeAudio.js';
 import writeTextFile from './writeTextFile.js';
-async function processVideo(videoUrl, summaryId, length = 'short', mock = false) {
+async function processVideo(videoUrl, summaryId, length = 'short', type = 'pdf', mock = false) {
     try {
         const client = await serverSuperbaseClient(event)
         // timestamp
