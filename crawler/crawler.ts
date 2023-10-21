@@ -154,8 +154,9 @@ async function main() {
     }
     // let videos = await Promise.all(links.map(async l => await video_link_by_lecture_id(l, await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD))));
     console.timeEnd();
+    video_links = video_links.filter(l => l !== null);
     video_links.sort((a, b) => a.duration - b.duration);
-    fs.writeFileSync('video-links.json', JSON.stringify(video_links.filter(l => l !== null)));
+    fs.writeFileSync('video-links.json', JSON.stringify(video_links));
 }
 
 console.log('start');
