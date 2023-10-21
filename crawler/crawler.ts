@@ -24,7 +24,7 @@ function lecture_id_by_path(path: string): string {
     return path.split('/').at(-1)?.split('.')[0];
 }
 
-async function get_lecture_links_by_query_offset(query: string, offset: Number = 0): Promise<string[]> {
+async function get_lecture_links_by_query_offset(query: string, offset: number = 0): Promise<string[]> {
     let url = new URL('https://video.ethz.ch/search-results.html');
     url.searchParams.append('offset', offset.toString());
     url.searchParams.append('query', query);
@@ -115,10 +115,10 @@ async function get_lecture_links_by_query(query: string): Promise<string[]> {
     return links;
 }
 
-async function get_duration_by_url(url: URL): Promise<Number> {
+async function get_duration_by_url(url: URL): Promise<number> {
     let data = await ffprobe(url);
 
-    return Math.floor(data.duration);
+    return data.duration;
 }
 
 async function main() {
