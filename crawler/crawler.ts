@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const BASE_URL = 'https://video.ethz.ch/';
 
-async function get_token(username: string, password: string): Promise<string> {
+async function get_cookies(username: string, password: string): Promise<string> {
     const body = new FormData();
     body.set('_charset_', 'utf-8');
     body.set('j_username', username);
@@ -120,7 +120,7 @@ async function main() {
         'https://video.ethz.ch/events/2019/rsl/83f9587c-82ea-43ab-94c4-ad2a78fc7dac.html'
     ];
 
-    let videos = await Promise.all(links.map(async l => await video_link_by_lecture_id(l, await get_token(process.env.ETH_USERNAME, process.env.ETH_PASSWORD))));
+    let videos = await Promise.all(links.map(async l => await video_link_by_lecture_id(l, await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD))));
     console.timeEnd();
     fs.writeFileSync('video-links.json', JSON.stringify(videos, null, 4));
 }
