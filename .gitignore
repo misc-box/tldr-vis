@@ -30,3 +30,5 @@ package-lock.json
 .vscode
 server/output
 server/src/tmp
+
+package-lock.json
