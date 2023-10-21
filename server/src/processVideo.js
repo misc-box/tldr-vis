@@ -4,9 +4,11 @@ import saveSummaryToPDF from './saveSummaryToPDF.js';
 // Import the functions
 import fs from 'fs';
 // Import the functions
+import convertVideoToMp3 from './convertVideoToMp3.js';
 import extractTopics from './extractTopics.js';
 import readTextFile from './readTextFile.js';
 import summarizeTranscription from './summarizeTranscription.js';
+import transcribeAudio from './transcribeAudio.js';
 import writeTextFile from './writeTextFile.js';
 async function processVideo(videoUrl, length = 'short') {
     try {
@@ -17,15 +19,21 @@ async function processVideo(videoUrl, length = 'short') {
             fs.mkdirSync(outputFolder);
         }
         // mock to save api calls
-        const mock = true;
+        const mock = false;
         let transcription, outputTranscription;
         if (!mock) {
             const audioPath = await convertVideoToMp3(videoUrl, `audio-${timestamp}`);
             transcription = await transcribeAudio(audioPath);
 
             // delete audio file    
-            await fs.unlink(audioPath);
+            try {
 
+                // delete audio file
+                await fs.promises.unlink(audioPath);
+            } catch (error) {
+                console.error('Error in processing video:', error.message);
+                throw error;
+            }
             outputTranscription = `${outputFolder}/transcription-${timestamp}.txt`;
             await writeTextFile(outputTranscription, transcription);
 

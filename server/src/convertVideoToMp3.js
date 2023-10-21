@@ -1,7 +1,7 @@
 import ffmpeg from 'fluent-ffmpeg';
+import fs from 'fs';
 import path from 'path'; // Import the path module here
 import { fileURLToPath } from 'url';
-
 const __filename = fileURLToPath(import.meta.url);
 
 
