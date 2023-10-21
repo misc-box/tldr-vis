@@ -47,9 +47,9 @@ type Lecture = { name: string, date: Date, lecturer: string, link: URL, duration
 ///
 /// sends cookie if given, some lectures are 'protected'
 async function get_video_link_by_lecture_id(path: string, cookies?: string): Promise<Lecture> {
-    let id = '0'; //can be anything as long as not an empty string
-    let path_prefix = path.split('/').slice(0, -1).join('/');
-    let video_url = new URL(`${path_prefix}/${id}.series-metadata.json`, BASE_URL);
+    const path_prefix = path.split('.').slice(0, -1).join('.');
+    const video_url = new URL(`${path_prefix}.series-metadata.json`, BASE_URL);
+
     let res = await fetch(video_url, { headers: { cookie: cookies } });
     let json;
     try {

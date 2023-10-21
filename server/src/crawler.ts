@@ -1,24 +1,22 @@
 import ffprobe from 'ffprobe';
 import { path as ffprobe_path } from '@ffprobe-installer/ffprobe';
-process.env.FFPROBE_PATH = ffprobe_path;
 
 const BASE_URL = 'https://video.ethz.ch/';
 
-async function get_duration_by_url(url: URL): Promise<number> {
-    const data = await ffprobe(url);
+export async function get_duration_by_url(url: URL): Promise<number> {
+    const data = await ffprobe(url, {path: ffprobe_path});
 
-    return data.format.duration;
+    return Math.floor(parseFloor(data.streams[0].duration) / 60 / 1000);
 }
 
-type Lecture = { name: string, date: Date, lecturer: string, link: URL, duration: number };
+export type Lecture = { name: string, date: Date, lecturer: string, link: URL, duration: number };
 
 /// path should be the path of the url in the url box (without the base) or the whole url
 ///
 /// sends cookie if given, some lectures are 'protected'
-async function get_video_link_by_lecture_id(path: string, cookies?: string): Promise<Lecture> {
-    const id = '0'; //can be anything as long as not an empty string xD
-    const path_prefix = path.split('/').slice(0, -1).join('/');
-    const video_url = new URL(`${path_prefix}/${id}.series-metadata.json`, BASE_URL);
+export async function get_video_link_by_lecture_id(path: string, cookies?: string): Promise<Lecture> {
+    const path_prefix = path.split('.').slice(0, -1).join('.');
+    const video_url = new URL(`${path_prefix}.series-metadata.json`, BASE_URL);
 
     let res = await fetch(video_url, { headers: { cookie: cookies } });
     let json;
@@ -52,11 +50,11 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
         lecturer,
         date,
         link: links[0].link,
-        duration: moment.duration(selected.duration).asMilliseconds()
+        duration: Math.floor(moment.duration(selected.duration).asMilliseconds() * 1000)
     };
 }
 
-async function get_cookies(username: string, password: string): Promise<string> {
+export async function get_cookies(username: string, password: string): Promise<string> {
     let body = new FormData();
     body.set('_charset_', 'utf-8');
     body.set('j_username', username);
