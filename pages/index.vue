@@ -15,10 +15,11 @@
             <div class="text-3xl">Processing, this might take a while...</div>
             <UAlert 
                 v-if="jokes"
+
                 class="mt-4"
                 icon="i-heroicons-face-smile"
                 title="Here's a joke while you wait!" 
-                variant="soft"
+                variant="subtle"
                 color="primary"
                 :description="jokes[0].joke"
             />
@@ -55,7 +56,7 @@
                                 <li v-for="subTopic in topic['sub-topics']">{{ subTopic }}</li>
                             </ul>
                             <UAlert 
-                                variant="soft" 
+                                variant="subtle" 
                                 color="primary" 
                                 icon="i-heroicons-question-mark-circle"
                                 title="If you understood this topic correctly, you should be able to answer this question:"
