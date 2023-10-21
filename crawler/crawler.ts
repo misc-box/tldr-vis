@@ -124,7 +124,7 @@ async function main() {
     let links = JSON.parse(fs.readFileSync('links.json'));
 
     let processes = [];
-    let video_links = JSON.parse(fs.readFileSync('video-links.json'));
+    let video_links: Lecture[] = JSON.parse(fs.readFileSync('video-links.json'));
     let cookies = await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD);
 
     let left = links.length - video_links.length;
@@ -146,7 +146,7 @@ async function main() {
     }
     // let videos = await Promise.all(links.map(async l => await video_link_by_lecture_id(l, await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD))));
     console.timeEnd();
-    fs.writeFileSync('video-links.json', JSON.stringify(video_links, null, 4));
+    fs.writeFileSync('video-links.json', JSON.stringify(video_links.filter(v => v !== null).map(v => ({ name: v.name, date: v.date, lecturer: v.lecturer, link: v.link }))));
 }
 
 console.log('start');
