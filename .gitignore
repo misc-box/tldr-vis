@@ -27,3 +27,4 @@ server/src/config.js
 
 .vscode
 server/output
+server/src/tmp
