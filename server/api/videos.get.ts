@@ -25,4 +25,11 @@ export default defineEventHandler(async (event) => {
     const {data: videos, error} = await client
         .from('videos')
         .select('id')
+    return {
+        statusCode: 200,
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify(videos),
+    }
   })
