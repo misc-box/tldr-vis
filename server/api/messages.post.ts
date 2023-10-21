@@ -1,8 +1,8 @@
-import { serverSuperbaseClient } from '#supabase/server'
+import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
 
-    const client = await serverSuperbaseClient(event)
+    const client = await serverSupabaseClient(event)
 
     const body = await readBody(event)
     const {text, type, user_summary_id} = JSON.parse(body)

@@ -1,8 +1,7 @@
 
 
 import saveSummaryToPDF from './saveSummaryToPDF.js';
-// Import the functions
-import fs from 'fs';
+import {promises as fs} from 'fs';
 // Import the functions
 import convertVideoToMp3 from './convertVideoToMp3.js';
 import extractTopics from './extractTopics.js';
@@ -16,8 +15,8 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
         const timestamp = Date.now();
         let current = timestamp;
         const outputFolder = './server/output';
-        if (!fs.existsSync(outputFolder)) {
-            fs.mkdirSync(outputFolder);
+        if ((await fs.stat(outputFolder)) === null) {
+            await fs.mkdir(outputFolder);
         }
         let transcription, outputTranscription;
 
@@ -37,7 +36,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
 
             // delete audio file    
             try {
-                await fs.promises.unlink(audioPath);
+                await fs.unlink(audioPath);
             } catch (error) {
                 console.error('Error in processing video:', error.message);
                 throw error;

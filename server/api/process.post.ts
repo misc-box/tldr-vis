@@ -1,6 +1,6 @@
 import { Stream } from "form-data";
 import processVideo from "../src/processVideo";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 // @ts-ignore
 import PDFKit from "pdfkit";

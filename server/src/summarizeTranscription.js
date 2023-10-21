@@ -1,5 +1,7 @@
 
 import fetch from 'node-fetch';
+import readTextFile from './readTextFile.js'
+import { get_encoding, encoding_for_model } from "tiktoken";
 
 const { OPENAI_API_KEY } = useRuntimeConfig();
 
@@ -8,18 +10,13 @@ async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
     let instruction = '';
     switch (summaryLength) {
         case 'short':
-            instruction = `Provide a SHORT summary of this lecture transcript, with bullet points but ONLY elaborating on
-            the most important and pressing content. 
-            Only include content you are sure of! Lecture transcript: `;
-            break;
-        case 'long':
-            instruction = `Provide a LONG AND DETAILED summary of this lecture transcript by defining key concepts, working with
-            bullet points to include AS MUCH RELEVANT INFORMATION AS POSSIBLE into the summary. 
-            Only include content you are sure of! Lecture transcript:`;
+            instruction = await readTextFile('server/src/instructions//short.txt');
             break;
         case 'medium':
-            instruction = `Provide a medium-long summary of this lecture transcript with bullet points and short texts. 
-            Only include content you are sure of! Lecture transcript:`;
+            instruction = await readTextFile('server/src/instructions//medium.txt');
+            break;
+        case 'long':
+            instruction = await readTextFile('server/src/instructions//long.txt');
             break;
         default:
             throw new Error('Invalid summary length');
@@ -44,12 +41,14 @@ async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
     // Ausführen des API-Aufrufs
     // choose the model based on token length, if more than 3800 use the gpt-3.5-turbo-16k else use the gpt-3.5-turbo
     let model = 'gpt-3.5-turbo';
-    // count words
-    const wordCount = text.split(/\s+/).length;
-    if (wordCount > 2800) {
+    const enc = encoding_for_model("text-davinci-003");
+    let tokenCount = enc.encode(text).length;
+    enc.free();
+
+    if (tokenCount > 4096) {
         model = 'gpt-3.5-turbo-16k';
     }
-    console.log('Word count:', wordCount);
+    console.log('Token count:', tokenCount);
     console.log('Model:', model);
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -68,7 +67,7 @@ async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
     // Auswertung der Antwort
     const data = await response.json();
     console.log(data.usage);
-    return data.choices[0]['message']['content'].trim();
+    return data.choices[0].message.content.trim();
 }
 
 export default summarizeText;
