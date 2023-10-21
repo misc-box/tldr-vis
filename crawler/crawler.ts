@@ -59,25 +59,24 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
         return null;
     }
 
-    if (json['protection'] === 'PWD' || !json['authorized']) {
+    if (json.protection === 'PWD' || !json.authorized) {
         // console.log('Not authorized: ' + JSON.stringify(json, null, 4));
         return null;
     }
 
 
-    let selected = json['selectedEpisode'];
-    let name = selected['title'];
-    let lecturer = selected['createdBy'].join(', ');
-    let date = new Date(selected['createdAt']);
-    let presentations: { height: number, width: number, type: string, url: string }[] = selected['media']['presentations'] ?? selected['media']['presenters'];
+    let selected = json.selectedEpisode;
+    let name = selected.title;
+    let lecturer = selected.createdBy.join(', ');
+    let date = new Date(selected.createdAt);
+    let presentations: { height: number, width: number, type: string, url: string }[] = selected.media.presentations ?? selected.media.presenters;
     let links = presentations.filter(p => p.type === 'video/mp4').map(p => ({ resolution: p.width * p.height, link: new URL(p.url) }));
     links.sort((v1, v2) => v1.resolution - v2.resolution);
-    let other_ids = json['episodes'].map((e: { id: string }) => e.id);
 
     // e.g. on podcasts there are `.mp4`
     if (links.length === 0) return null;
 
-    return { name: name, lecturer: lecturer, date: date, link: links[0].link, duration: moment.duration(selected['duration']).asMilliseconds() };
+    return { name: name, lecturer: lecturer, date: date, link: links[0].link, duration: moment.duration(selected.duration).asMilliseconds() };
 }
 
 /// the question mark (`?`) seems to return all lectures
@@ -117,7 +116,7 @@ async function get_lecture_links_by_query(query: string): Promise<string[]> {
 
 async function get_duration_by_url(url: URL): Promise<number> {
     let data = await ffprobe(url);
-    console.log(data);
+
     return data.format.duration;
 }
 
