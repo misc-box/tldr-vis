@@ -1,55 +1,81 @@
 import { serverSuperbaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
+    try{
+        const client = await serverSuperbaseClient(event)
 
-    const client = await serverSuperbaseClient(event)
+        const body = await readBody(event)
+        const {videoUrl} = JSON.parse(body)
+        const user = await client.auth.user()
 
-    const body = await readBody(event)
-    const {video_url} = JSON.parse(body)
-    const user = await client.auth.user()
+        const videoId = await handleVideoInsert(videoUrl, client)
+        await handleUserVideoInsert(videoUrl, videoId, user, client)
+        
+        return {
+            statusCode: 200,
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify({videoId}),
+        }
+    }
 
-    // check if video_url does not yet exist in db
-    let video_id
-    const {data: found_videos, error} = await client
+    catch(error) {
+        return {
+            statusCode: 500,
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify({message: 'Internal server error'}),
+        }
+    }
+  })
+
+async function handleVideoInsert(videoUrl: string, client: serverSuperbaseClient) {
+    // insert video_url into db if it does not yet exist
+    let videoId: number
+    const {data: foundVideos, error} = await client
         .from('videos')
         .select('id')
-        .eq('video_url', video_url)
-    if(found_videos.lenght == 0) {
+        .eq('video_url', videoUrl)
+    if (error) {
+        throw Error('handleVideoInsert() error ' + error)
+    }
+    if(foundVideos.lenght == 0) {
         await client.from('videos').insert([
-            {url: video_url}
+            {url: videoUrl}
         ]) // insert video_url
         const {data: inserted_video, error} = await client
             .from('videos')
             .select('id')
-            .eq('video_url', video_url)
+            .eq('video_url', videoUrl)
             .single()
-        video_id = inserted_video.id
+        if (error) {
+            throw new Error('handleVideoInsert() error ' + error)
+        }
+        videoId = inserted_video.id
     }
     else{
-        video_id = found_videos[0].id
+        videoId = foundVideos[0].id
     }
+    return videoId
+}
 
-    // check if user is logged in and has video not yet added
+async function handleUserVideoInsert(videoUrl: string, videoId: number, user: any, client: serverSuperbaseClient) {
+    // insert video_url into db if it does not yet exist
     if(user) {
-        const {data: user_videos, error} = await client
+        const {data: foundUserVideos, error} = await client
             .from('user_videos')
             .select('id')
             .eq('user_id', user.id)
-            .eq('video_url', video_url)
-            .single()
-        if(user_videos.lenght == 0) {
+            .eq('video_url', videoUrl)
+        if (error) {
+            throw new Error('handleUserVideoInsert() error ' + error)
+        }
+        if(foundUserVideos.lenght == 0) {
             await client.from('user_videos').insert([
-                {user_id: user.id, video_id}
+                {user_id: user.id, video_id: videoId}
             ]) // insert video_url
         }
     }
-
-    return {
-        statusCode: 200,
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify({video_id}),
-    }
-
-  })
+}

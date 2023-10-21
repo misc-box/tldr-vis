@@ -2,19 +2,24 @@ import { serverSuperbaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
 
-    const client = await serverSuperbaseClient(event)
+    try{
+        const client = await serverSuperbaseClient(event)
 
-    const body = await readBody(event)
-    const {video_id} = JSON.parse(body)
-    const user = await client.auth.user()
+        const body = await readBody(event)
+        const {video_id: videoId} = JSON.parse(body)
+        const user = await client.auth.user()
 
-    // check if user is logged in and user_summary_id exists
-    const {data: video_topics, error_found_user_summaries} = await client
-        .from('video_topics')
-        .select('video_topics.params')
-        .join('videos', {on: {'video_topics.video_id': 'video.id'}})
-        .eq('video.id', video_id)
-    if(error_found_user_summaries) {
+        const videoTopics = await handleGetVideoTopics(videoId, client)
+        return {
+            statusCode: 200,
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(videoTopics),
+        }
+    }
+    
+    catch(error) {
         return {
             statusCode: 500,
             headers: {
@@ -23,13 +28,17 @@ export default defineEventHandler(async (event) => {
             body: JSON.stringify({message: 'Internal server error'}),
         }
     }
-
-    return {
-        statusCode: 200,
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify(video_topics),
-    }
-    
   })
+
+
+async function handleGetVideoTopics(videoId: number, client: serverSuperbaseClient) {
+    const {data: videoTopics, error} = await client
+        .from('video_topics')
+        .select('video_topics.params')
+        .join('videos', {on: {'video_topics.video_id': 'video.id'}})
+        .eq('video.id', videoId)
+    if(error) {
+        throw new Error('handleGetVideoTopics() error ' + error)
+    }
+    return videoTopics
+}
