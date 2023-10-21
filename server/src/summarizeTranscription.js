@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 
 const { OPENAI_API_KEY } = useRuntimeConfig();
 
-async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
+async function summarizeText(text, summaryLength = 'short', type = 'text', otherOptions = {}) {
     // Definieren der Systemanweisung
     let instruction = '';
     switch (summaryLength) {
@@ -24,6 +24,16 @@ async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
         default:
             throw new Error('Invalid summary length');
 
+    }
+    switch (type) {
+        case 'text':
+            instruction += ' ';
+            break;
+        case 'latex':
+            instruction += ' The summary should be written in LaTeX code. ';
+            break;
+        default:
+            throw new Error('Invalid summary type');
     }
     const systemInstruction = {
         role: "system",

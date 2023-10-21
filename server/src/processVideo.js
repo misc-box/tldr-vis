@@ -10,7 +10,7 @@ import readTextFile from './readTextFile.js';
 import summarizeTranscription from './summarizeTranscription.js';
 import transcribeAudio from './transcribeAudio.js';
 import writeTextFile from './writeTextFile.js';
-async function processVideo(videoUrl, summaryId, length = 'short', type = 'pdf', mock = false) {
+async function processVideo(videoUrl, summaryId, length = 'short', type = 'text', mock = false) {
     try {
         const client = await serverSuperbaseClient(event)
         // timestamp
@@ -58,7 +58,7 @@ async function processVideo(videoUrl, summaryId, length = 'short', type = 'pdf',
             transcription = await readTextFile(`${outputTranscription}`);
         }
 
-        const summary = await summarizeTranscription(transcription, length);
+        const summary = await summarizeTranscription(transcription, length, type);
         const pdfSummary = saveSummaryToPDF(summary, `${outputFolder}/summary-${timestamp}`);
         console.log('Needed time in seconds to summarize transcription:', (Date.now() - current) / 1000);
         current = Date.now();
