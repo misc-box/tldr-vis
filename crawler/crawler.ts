@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const { parse } = require('node-html-parser');
 const fs = require('fs');
+const moment = require('moment');
 
 const BASE_URL = 'https://video.ethz.ch/';
 
@@ -39,7 +40,7 @@ async function get_lecture_links_by_query_offset(query: string, offset: Number =
     return video_links;
 }
 
-type Lecture = { name: string, date: Date, lecturer: string, link: URL, other_ids: string[] };
+type Lecture = { name: string, date: Date, lecturer: string, link: URL, duration: number };
 
 /// path should be the path of the url in the url box (without the base) or the whole url
 ///
@@ -75,7 +76,7 @@ async function get_video_link_by_lecture_id(path: string, cookies?: string): Pro
     // e.g. on podcasts there are `.mp4`
     if (links.length === 0) return null;
 
-    return { name: name, lecturer: lecturer, date: date, link: links[0].link, other_ids: other_ids };
+    return { name: name, lecturer: lecturer, date: date, link: links[0].link, duration: moment.parse(selected['duration']).asMilliseconds() };
 }
 
 /// the question mark (`?`) seems to return all lectures
@@ -136,7 +137,7 @@ async function main() {
 
         if (processes.length == 500) {
             let promises = await Promise.all(processes);
-            video_links.push(...promises);
+            video_links.push(...promises.filter(l => l !== null));
             processes.length = 0;
 
             fs.writeFileSync('video-links.json', JSON.stringify(video_links));
