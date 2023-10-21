@@ -126,6 +126,7 @@ async function main() {
 
     let processes = [];
     let video_links: Lecture[] = JSON.parse(fs.readFileSync('video-links.json'));
+    if (process.env.ETH_USERNAME === undefined || process.env.ETH_PASSWORD === undefined) console.warn('No credentials, only downloading unprotected videos.');
     let cookies = await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD);
 
     let left = links.length - video_links.length;
@@ -137,7 +138,7 @@ async function main() {
 
         if (processes.length == 500) {
             let promises = await Promise.all(processes);
-            video_links.push(...promises.filter(l => l !== null));
+            video_links.push(...promises);
             processes.length = 0;
 
             fs.writeFileSync('video-links.json', JSON.stringify(video_links));
@@ -147,7 +148,7 @@ async function main() {
     }
     // let videos = await Promise.all(links.map(async l => await video_link_by_lecture_id(l, await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD))));
     console.timeEnd();
-    fs.writeFileSync('video-links.json', JSON.stringify(video_links));
+    fs.writeFileSync('video-links.json', JSON.stringify(video_links.filter(l => l !== null)));
 }
 
 console.log('start');
