@@ -124,10 +124,10 @@ async function main() {
     let links = JSON.parse(fs.readFileSync('links.json'));
 
     let processes = [];
-    let video_links = [];
+    let video_links = JSON.parse(fs.readFileSync('video-links.json'));
     let cookies = await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD);
 
-    let left = links.length;
+    let left = links.length - video_links.length;
     console.log('Total: ' + left);
     while (left > 0) {
         processes.push(get_video_link_by_lecture_id(links.at(-left), cookies));
