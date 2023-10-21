@@ -26,5 +26,5 @@ logs
 server/src/config.js
 
 .vscode
-#server/output
+server/output
 server/src/tmp
