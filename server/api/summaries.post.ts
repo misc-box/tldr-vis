@@ -59,6 +59,7 @@ async function handleExistingSummary(client: serverSuperbaseClient, videoId: num
         .select('id')
         .eq('video_id', videoId)
         .eq('length', length)
+        .eq('type', type)
     if(error) {
         throw new Error('handleExistingSummary() error ' + error)
     }
@@ -125,7 +126,7 @@ async function handleSummaryInsert(client: serverSuperbaseClient, videoId: numbe
     
 
     await client.from('summaries').insert([
-        {video_id: videoId, length: length}
+        {video_id: videoId, length: length, type: type}
     ])
 
     const {data: insertedSummary, error: errorInsert} = await client
