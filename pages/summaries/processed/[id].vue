@@ -25,7 +25,7 @@
                                     </div>
                                     <div class="flex gap-2">
                                         <UButton icon="i-heroicons-arrow-down" size="lg"
-                                            @click="saveByteArray('summary.pdf', summary?.result.summaryBuf)">
+                                            @click="saveByteArray('summary.pdf', summary?.data.result.summaryBuf)">
                                             <span class="font-semibold">Download Now</span>
                                         </UButton>
                                         <UButton icon="i-heroicons-newspaper" color="gray" size="lg" @click="
@@ -104,7 +104,7 @@
                         </div>
 
                         <div v-else-if="item.key === 'chat'">
-                            <Chat />
+                            <Chat :transcript="summary.data.transcript" />
                         </div>
 
                         <div v-else-if="item.key === 'quiz'">

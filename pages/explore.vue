@@ -5,7 +5,7 @@
         </div>
         <div>
             <!-- <pre>{{ summaries }}</pre> -->
-            <SummaryCard v-for="summary in summaries" @click="navigateTo(`/summaries/${(summary as any).id}`)"  :summary="summary" />
+            <SummaryCard v-for="summary in summaries" @click="navigateTo(`/summaries/processed/${(summary as any).id}`)"  :summary="summary" />
         </div>
     </div> 
 </template>
