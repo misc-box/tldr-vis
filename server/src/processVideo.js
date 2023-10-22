@@ -19,6 +19,12 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
 
         const path = './server/output';
 
+        fs.readdir(testFolder, (err, files) => {
+            files.forEach(file => {
+                console.log(file);
+            });
+        });
+
         try {
             await fsPromises.access(path)
         } catch (e) {
