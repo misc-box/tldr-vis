@@ -104,7 +104,6 @@ export default defineEventHandler(event => {
             setLoadingStatus(client, videoUrl, 'Saving Transcription ... (4/8)');
             await writeTextFile(outputTranscription, transcription);
 
-
             setLoadingStatus(client, videoUrl, 'Summarizing ... (5/8)');
 
             const summary = await summarizeTranscription(transcription, length);
