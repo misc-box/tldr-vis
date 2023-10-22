@@ -9,6 +9,17 @@
                 </h1>
             </div>
             <NewSummary @summarize="onSummarize" />
+            <UAlert variant="subtle" title="">
+                <template #description>
+                    <div class="flex items-center gap-2 justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                            <UIcon name="i-heroicons-clipboard-document-list" class="w-5 h-5" />
+                            <span>Copy a test video link here :)</span>
+                        </div>
+                        <UButton size="xs" variant="soft" icon="i-heroicons-clipboard-document-list" label="Copy to Clipboard" @click="copyGoodVideoToClipboard()" />
+                    </div>
+                </template>
+            </UAlert>
         </div>
         <div
             v-else-if="loading && !summaryVisible"
@@ -91,11 +102,7 @@
                                 ]"
                             >
                                 <template #default="{ item, index, open }">
-                                    <UButton
-                                        color="primary"
-                                        variant="soft"
-                                        class="w-44"
-                                    >
+                                    <UButton color="primary" variant="soft" class="w-44">
                                         <span class="truncate">{{ item.label }}</span>
 
                                         <template #trailing>
@@ -218,5 +225,12 @@ function saveByteArray(reportName, byte) {
     var fileName = reportName;
     link.download = fileName;
     link.click();
+}
+
+const toast = useToast();
+
+const copyGoodVideoToClipboard = async () => {
+    await navigator.clipboard.writeText('https://oc-vp-distribution04.ethz.ch/mh_default_org/oaipmh-mmp/09e71d9e-8399-40ea-be39-605285e0ae65/33fbd877-2001-4767-8a76-9b5bc7a2479c/20170918_1340_HPHG2_YourFutureInBiology_Theler.mp4');
+    toast.add({ title: "Copied to clipboard successfully.", icon: "i-heroicons-check-badge" })
 }
 </script>
