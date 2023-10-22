@@ -1,4 +1,4 @@
-import config from './config.js';
+import config from './../config.js';
 
 import fetch from 'node-fetch';
 
@@ -11,7 +11,7 @@ async function generateQuiz(text) {
     // Definieren der Systemanweisung
     let instruction = '';
 
-    instruction = await readTextFile('server/src/instructions//quiz.txt');
+    instruction = await readTextFile('server/src/instructions/quiz.txt');
 
 
     let model, messages;
