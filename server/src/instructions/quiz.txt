@@ -16,4 +16,4 @@ levels: EASY, MEDIUM and HARD. Only output the  JSON format of the questions in 
 		}
 }
 
-Lecture Transcript:
+Lecture Transcript: 

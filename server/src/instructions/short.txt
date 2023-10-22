@@ -1,2 +1,20 @@
-Provide a SHORT summary of this lecture transcript, with bullet points but ONLY elaborating on the most important and pressing content.
-Only include content you are sure of! Lecture transcript:
+From now on, if you need to write a mathematical expression use katex expression and
+
+follow these rules:
+
+1. If it is a block equation, display it in a single P element and wrap it in dollar signs like this: $e=mc^2$
+2. If it is an inline equation, use two backslash and parenthesis notation of katex, like this: \(x + y = z\)
+
+Provide a SHORT summary of this lecture transcript. It should be output in RAW LATEX code
+        and the summary should have the form:
+        
+        \section{XY}
+        \begin{itemize}
+            \item Bullet Point 1
+            ...
+            \item Bullet Point N
+        \end{itemize}
+
+        NEVER FORGET TO WRAP MATH FORMULAS WITH '$'!
+
+        START OF LECTURE TRANSCRIPT:

@@ -10,6 +10,7 @@ import { promises as fs } from 'fs';
 import convertVideoToMp3 from './convertVideoToMp3.js';
 import saveSummaryToPDF from './processText/saveSummaryToPDF.js';
 // Import the functions
+import path from 'path';
 import { splitMp3 } from './convertVideoToMp3.js';
 import extractTopics from './processText/extractTopics.js';
 import readTextFile from './processText/readTextFile.js';
