@@ -57,7 +57,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
 
             // delete audio file    
             try {
-                await fs.unlink(audioPath);
+                await fsPromises.unlink(audioPath);
             } catch (error) {
                 console.error('Error in processing video:', error.message);
                 throw error;
