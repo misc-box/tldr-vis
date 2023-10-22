@@ -1,7 +1,8 @@
 
 
 import saveSummaryToPDF from './saveSummaryToPDF.js';
-import { promises as fs } from 'fs';
+import { promises as fsPromises } from 'fs';
+import fs from "fs";
 // Import the functions
 import convertVideoToMp3 from './convertVideoToMp3.js';
 import extractTopics from './extractTopics.js';
@@ -19,7 +20,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
         const path = './server/output';
 
         try {
-            await fs.access(path)
+            await fsPromises.access(path)
         } catch (e) {
             // Creating new: 
             console.log('create directory')
