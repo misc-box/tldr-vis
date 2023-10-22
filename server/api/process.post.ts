@@ -12,7 +12,6 @@ import readTextFile from "../src/processText/readTextFile";
 import writeTextFile from "../src/processText/writeTextFile";
 import { transcribeAudio } from "../src/transcribeAudio";
 import convertVideoToMp3, { splitMp3 } from "../src/convertVideoToMp3";
-import { generatePDFFromLatex } from "../src/processText/saveLatexPdf";
 
 async function stream2buffer(stream: Stream): Promise<Buffer> {
 
@@ -124,13 +123,7 @@ export default defineEventHandler(event => {
 
             const summary = await summarizeTranscription(transcription, length);
             setLoadingStatus(client, videoUrl, 'Saving Summary ... (7/9)');
-            // const pdfSummary = await saveSummaryToPDF(summary, `${outputFolder}/summary-${timestamp}`);
-            await writeTextFile(`${outputFolder}/summary-${timestamp}-temp.tex`, summary)
-
-            await generatePDFFromLatex(`${outputFolder}/summary-${timestamp}-temp.tex`, outputFolder)
-
-            const pdfSummary = `${outputFolder}/summary-${timestamp}-temp.tex`;
-
+            const pdfSummary = await saveSummaryToPDF(summary, `${outputFolder}/summary-${timestamp}`);
             console.log('Needed time in seconds to summarize transcription:', (Date.now() - current) / 1000);
             current = Date.now();
 
