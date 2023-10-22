@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-const summaryLengthOptions = ["Short", "Medium", "Detailed"];
+const summaryLengthOptions = ["Short", "Medium", "Long"];
 const selectedLength = ref(summaryLengthOptions[0]);
 
 const videoUrl = ref("");
