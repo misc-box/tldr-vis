@@ -2,6 +2,7 @@
     <UContainer class="max-w-2xl">
         <NuxtPage />
     </UContainer>
+    <UNotifications />
 </template>
 
 <style>

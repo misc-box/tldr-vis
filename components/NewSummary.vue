@@ -47,8 +47,20 @@ const selectedLength = ref(summaryLengthOptions[0]);
 
 const videoUrl = ref("");
 
+const toast = useToast();
+
 const emit = defineEmits(["summarize"]);
 const submit = async () => {
+    if (!videoUrl.value) {
+        toast.add({ title: "Please enter a link!" });
+        return;
+    }
+
+    if (!videoUrl.value.includes("ethz.ch")) {
+        toast.add({ title: "Please enter an ETHz Video!" });
+        return;
+    }
+
     emit("summarize", { videoUrl: videoUrl.value, length: selectedLength.value.toLowerCase() })
 };
 </script>
