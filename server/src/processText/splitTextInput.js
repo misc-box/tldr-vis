@@ -2,7 +2,7 @@ import { encoding_for_model } from "tiktoken";
 
 function splitTextInput(text, instruction) {
     let model, messages;
-    const enc = encoding_for_model("gpt-3.5-turbo");
+    const enc = encoding_for_model("gpt-3.5-turbo-16k");
     let tokenCount = enc.encode(text).length;
     enc.free();
     // if over 16k tokens then split into multiple requests and add to system instruction how many requests come. Then generate 1 final summary.
@@ -10,7 +10,7 @@ function splitTextInput(text, instruction) {
         if (tokenCount > 4096) {
             model = 'gpt-3.5-turbo-16k';
         } else {
-            model = 'gpt-3.5-turbo';
+            model = 'gpt-3.5-turbo-16k';
         }
 
         const systemInstruction = {
