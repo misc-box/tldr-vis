@@ -1,33 +1,7 @@
 <template>
-    <div class="flex flex-col justify-center items-center w-full">
-        <div v-if="!loading && !summaryVisible" class="mt-44">
-            <div class="flex gap-2 items-center justify-center w-full">
-                <h1
-                    class="text-4xl text-center font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-500"
-                >
-                    TLDR - Lecture Summarizer
-                </h1>
-            </div>
-            <NewSummary @summarize="onSummarize" />
-        </div>
-        <div
-            v-else-if="loading && !summaryVisible"
-            class="mt-44 animate-pulse flex flex-col items-center gap-2"
-        >
-            <img src="../assets/images/book.png" class="w-36 h-32 animate-bounce" />
-            <div class="text-3xl">Processing, this might take a while...</div>
-            <UAlert
-                v-if="jokes"
-                class="mt-4"
-                icon="i-heroicons-face-smile"
-                title="Here's a joke while you wait!"
-                variant="subtle"
-                color="primary"
-                :description="jokes[0].joke"
-            />
-        </div>
 
-        <div v-if="summaryVisible" class="lg:w-[1000px] my-10">
+    <div class="flex flex-col justify-center items-center w-full">
+            <div class="lg:w-[1000px] my-10">
             <UCard>
                 <UCard class="mx-4">
                     <div class="flex gap-2">
@@ -38,12 +12,7 @@
                                 <UButton
                                     class="mx-4"
                                     icon="i-heroicons-arrow-left"
-                                    @click="
-                                        () => {
-                                            summaryVisible = false;
-                                            loading = false;
-                                        }
-                                    "
+                                    @click="navigateTo('..')"
                                 />
                                 <span>Your summary has been generated:</span>
                             </div>
@@ -51,7 +20,7 @@
                                 <UButton
                                     icon="i-heroicons-arrow-down"
                                     size="lg"
-                                    @click="saveByteArray('summary.pdf', summaryData.value.summaryBuf)"
+                                    @click="saveByteArray('summary.pdf', summary?.result.summaryBuf)"
                                 >
                                     <span class="font-semibold">Download Now</span>
                                 </UButton>
@@ -59,7 +28,7 @@
                                     icon="i-heroicons-newspaper"
                                     color="gray"
                                     size="lg"
-                                    @click="saveByteArray('transcript.pdf', summaryData.value.transcriptBuf)"
+                                    @click="saveByteArray('transcript.pdf', summary.result.transcriptBuf)"
                                 >
                                     <span class="font-semibold">Download Transcript</span>
                                 </UButton>
@@ -72,7 +41,7 @@
                     <!-- <span>Hashtags: {{ summaryData.value.hashtags }}</span> -->
                 </div>
                 <div class="flex flex-col gap-2 overflow-auto max-h-xl p-4">
-                    <div v-for="topic in summaryData.value.topics" class="flex flex-col gap-3">
+                    <div v-for="topic in summary.result.topics" class="flex flex-col gap-3">
                         <UCard v-if="topic.name">
                             <div class="mt-2">
                                 <span class="truncate font-semibold text-lg">{{ topic.name }}</span>
@@ -176,29 +145,14 @@
 </template>
 
 <script setup lang="ts">
-const summaryData = ref({});
-const loading = ref(false);
-const summaryVisible = ref(false);
+const route = useRoute();
 
-const { JOKES_API_KEY } = useRuntimeConfig().public;
+const client = useSupabaseClient();
 
-const { data: jokes } = useFetch("https://api.api-ninjas.com/v1/jokes?limit=1", {
-    headers: { "X-Api-Key": JOKES_API_KEY },
-});
-
-const onSummarize = async (e) => {
-    loading.value = true;
-    summaryVisible.value = false;
-
-    const { data, pending } = await useFetch("/api/process", {
-        method: "POST",
-        body: JSON.stringify(e),
-    });
-
-    loading.value = false;
-    summaryVisible.value = true;
-    summaryData.value = data;
-};
+const { data: summary } = await useAsyncData('summary', async () => {
+  const { data } = await client.from('global_summaries').select('*').eq("id", route.params.id).single();
+  return data;
+})
 
 function base64ToArrayBuffer(base64) {
     var binaryString = window.atob(base64);
