@@ -19,7 +19,7 @@ export default defineNuxtConfig({
         redirectOptions: {
             login: "/",
             callback: "/",
-            exclude: ["/", "/explore", "/load-summary"],
+            exclude: ["/", "/explore", "/load-summary", "/summaries/*"],
         }
     }
 });
