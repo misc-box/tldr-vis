@@ -2,45 +2,55 @@ import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
 
-    const client = await serverSupabaseClient(event)
+    try{
+        const client = await serverSupabaseClient(event)
 
-    const body = await readBody(event)
-    const {user_summary_id} = JSON.parse(body)
-    const user = await client.auth.user()
+        const body = await readBody(event)
+        const user = await client.auth.getUser()
 
-    // check if user is logged in and user_summary_id exists
-    if(!user) {
+        // check if user is logged in and user_summary_id exists
+        if(!user.data.user) {
+            return {
+                statusCode: 401,
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: {message: 'Unauthorized'},
+            }
+        }
+        
+        const foundMessages = await handleMessagesRetrieval(client, user)
         return {
-            statusCode: 401,
+            statusCode: 200,
             headers: {
                 'content-type': 'application/json',
             },
-            body: {message: 'Unauthorized'},
+            body: {found_messages: foundMessages},
         }
     }
-    const {data: found_messages, error_found_user_summaries} = await client
-        .from('user_summaries')
-        .select('messages.params')
-        .eq('id', user_summary_id)
-        .eq('user_id', user.id)
-        .join('messages', {on: {'user_summaries.id': 'messages.user_summary_id'}})
-        .order('messages.created_at', {ascending: false})
-    if(error_found_user_summaries) {
+
+    catch(error: any) {
         return {
             statusCode: 500,
             headers: {
                 'content-type': 'application/json',
             },
-            body: {message: 'Internal server error'},
+            body: {message: error.message},
         }
     }
-
-    return {
-        statusCode: 200,
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: found_messages,
-    }
-    
   })
+
+
+
+async function handleMessagesRetrieval(client: any, user: any) {
+    const {data: found_messages, error} = await client
+        .from('user_summaries')
+        .select('messages.params')
+        .eq('user_id', user.data.user.id)
+        .join('messages', {on: {'user_summaries.id': 'messages.user_summary_id'}})
+        .order('messages.created_at', {ascending: false})
+    if(error) {
+        throw new Error('handleMessagesRetrieval error ' + error.message)
+    }
+    return found_messages
+}

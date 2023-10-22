@@ -2,31 +2,41 @@ import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
 
-    const client = await serverSupabaseClient(event)
+    try{
+        const client = await serverSupabaseClient(event)
 
-    const body = await readBody(event)
-    const user = await client.auth.user()
+        const user = await client.auth.getUser()
 
-    // check if user is logged in and user_summary_id exists
-    const {data: found_topics, error_found_user_summaries} = await client
-        .from('topics')
-        .select('*')
-    if(error_found_user_summaries) {
+
+        const foundTopics = await handleTopicRetrieval(client, user)
+
+        return {
+            statusCode: 200,
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: {found_topics: foundTopics},
+        }
+    }
+    
+    catch(error: any) {
         return {
             statusCode: 500,
             headers: {
                 'content-type': 'application/json',
             },
-            body: {message: 'Internal server error'},
+            body: {message: error.message},
         }
-    }
-
-    return {
-        statusCode: 200,
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: found_topics,
-    }
+    }   
     
   })
+
+async function handleTopicRetrieval(client: any, user: any) {
+    const {data: foundTopics, error: error} = await client
+        .from('topics')
+        .select('*')
+    if(error) {
+        throw new Error('handleTopicRetrieval() error ' + error.message)
+    }
+    return foundTopics
+}

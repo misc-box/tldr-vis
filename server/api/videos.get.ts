@@ -1,28 +1,61 @@
-// import { serverSupabaseClient } from '#supabase/server'
+import { serverSupabaseClient } from '#supabase/server'
 
-// export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
 
-//     const client = await serverSupabaseClient(event)
+    try{
+        const client = await serverSupabaseClient(event)
+        const user = await client.auth.getUser()
+        
+        let videos: any[] = []
+            if(user.data.user){
+                videos = await handleLoggedInUserVideos(client, user)
+            }
+            else {
+                videos = await handleAnonymousUserVideos(client)
+            }
+            
+        return {
+            statusCode: 200,
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: {videos: videos},
+        }
+    }
 
-//     const user = await client.auth.user()
+    catch(error: any) {
+        return {
+            statusCode: 500,
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: {message: error.message},
+        }
+    }
+  })
 
-//     // check if user is logged in then only return his videos
-//     if(user) {
-//         const {data: user_videos, error} = await client
-//             .from('user_videos')
-//             .select('video_id')
-//             .eq('user_id', user.id)
-//         return {
-//             statusCode: 200,
-//             headers: {
-//                 'content-type': 'application/json',
-//             },
-//             body: JSON.stringify(user_videos),
-//         }
-//     }
 
-//     //otherwise return all videos
-//     const {data: videos, error} = await client
-//         .from('videos')
-//         .select('id')
-//   })
+  async function handleLoggedInUserVideos(client: any, user: any) {
+    if(user.data.user) {
+        const {data: videos, error} = await client
+            .from('user_videos')
+            .select('videos.params')
+            .eq('user_id', user.data.user.id)
+            .join('videos', {'videos.id': 'user_videos.video_id'})
+        if (error) {
+            throw new Error('handleLoggedInUserVideos() error ' + error.message)
+        }
+        return videos
+    }
+    throw new Error('handleLoggedInUserVideos() assumes user to be logged in')
+  }
+
+    async function handleAnonymousUserVideos(client: any) {
+        const {data: videos, error} = await client
+            .from('videos')
+            .select('*')
+        if (error) {
+            throw new Error('handleAnonymousUserVideos() error ' + error.message)
+        }
+        return videos
+    }

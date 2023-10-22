@@ -1,105 +1,151 @@
-// import { serverSupabaseClient } from '#supabase/server'
+import { serverSupabaseClient } from '#supabase/server'
+import processVideo from '../src/processVideo'
 
-// export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
 
-//     const client = await serverSupabaseClient(event)
+    try{
+        const client = await serverSupabaseClient(event)
 
-//     const body = await readBody(event)
-//     const {video_id, length} = JSON.parse(body)
-//     const user = await client.auth.user()
+        const body = await readBody(event)
+        const {video_id: videoId, length, type} = body
+        const user = await client.auth.getUser()
 
-//     // check if summary already exists
-//     const {data: found_summaries, error_found_summaries} = await client
-//         .from('summaries')
-//         .select('id')
-//         .eq('video_id', video_id)
-//         .eq('length', length)
-//     if(found_summaries.lenght != 0) {
+        // check if summary already exists
+        let summary: object
+        summary = await handleExistingSummary(client, videoId, length, type, user)
+        if(!summary) {
+            const existingVideo = await handleExistingVideo(client, videoId, user)
+            if(!existingVideo) {
+                return {
+                    statusCode: 404,
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: {message: 'Video not found in database'},
+                }
+            }
+            await handleUserVideoInsert(client, videoId, user)
+            const summary = await handleSummaryInsert(client, videoId, length, type, user)
+            await handleUserSummaryInsert(client, summary.id, user)
+            processVideo(existingVideo.url) 
+            //await handleSummaryTopicInsert(client, insertedSummary.id, user, videoTopics)
+            //await hanldeSuggestedQuestionInsert(client, insertedSummary.id, suggestedQuestions)
+        }
+        return {
+            statusCode: 200,
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: {summary},
+        }
+    }
+        
+    catch(error: any) {
+        return {
+            statusCode: 500,
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: {message: error.message},
+        }
+    }
+  })
 
-//         // check if user is logged in and has video not yet added
-//         if(user) {
-//             const {data: user_summaries, error} = await client
-//                 .from('user_summaries')
-//                 .select('id')
-//                 .eq('user_id', user.id)
-//                 .eq('summary_id', found_summaries[0].id)
-//                 .single()
-//             if(user_summaries.lenght == 0) {
-//                 await client.from('user_summaries').insert([
-//                     {user_id: user.id, summary_id: found_summaries[0].id}
-//                 ])
-//             }
-//         }
 
-//         return {
-//             statusCode: 200,
-//             headers: {
-//                 'content-type': 'application/json',
-//             },
-//             body: JSON.stringify({summary_id: found_summaries[0].id}),
-//         }
-//     }
+async function handleExistingSummary(client: any, videoId: string, length: number, type: string, user: any) {
 
-//     // check if video_id exists otherwise return 404
-//     const {data: found_video, error_found_video} = await client
-//         .from('videos')
-//         .select('id', 'video_url')
-//         .eq('id', video_id)
-//     if(found_video.lenght == 0) {
-//         return {
-//             statusCode: 404,
-//             headers: {
-//                 'content-type': 'application/json',
-//             },
-//             body: JSON.stringify({message: 'Video not found in database'}),
-//         }
-//     }
-//     const video_url = found_video[0].video_url
+    const {data: foundSummaries, error} = await client
+        .from('summaries')
+        .select('id')
+        .eq('video_id', videoId)
+        .eq('length', length)
+        .eq('type', type)
+    if(error) {
+        return null
+    }
+    if(foundSummaries.length != 0) {
 
-//     // check if user is logged in and has video not yet added
-//     if(user) {
-//         const {data: user_videos, error_user_video} = await client
-//             .from('user_videos')
-//             .select('id')
-//             .eq('user_id', user.id)
-//             .eq('video_url', video_url)
-//             .single()
-//         if(user_videos.lenght == 0) {
-//             await client.from('user_videos').insert([
-//                 {user_id: user.id, video_id: found_video.id}
-//             ])
-//         }
-//     }
+        // check if user is logged in and has video not yet added then inset it
+        if(user.data.user) {
+            const {data: userSummaries, error} = await client
+                .from('user_summaries')
+                .select('id')
+                .eq('user_id', user.data.id)
+                .eq('summary_id', foundSummaries[0].id)
+            if (error) {
+                throw new Error('handleExistingSummary() error 2' + error.message)
+            }
+            if(userSummaries.lenght == 0) {
+                await client.from('user_summaries').insert([
+                    {user_id: user.data.id, summary_id: foundSummaries[0].id}
+                ])
+            }
+        }
 
-//     //TODO:
-//     //const summary_path = await get_summary_from_video_url(video_url) 
-//     const summary_path = "test_path"
+        return foundSummaries[0]
+    }
+    return null
+}
 
-//     // insert summary
-//     await client.from('summaries').insert([
-//         {video_id, length, summary_path}
-//     ])
+async function handleExistingVideo(client: any, videoId: string, user: any) {
+    const {data: foundVideos, error} = await client
+        .from('videos')
+        .select('id', 'video_url')
+        .eq('id', videoId)
+    if(error) {
+        return null
+    }
+    if(foundVideos.lenght != 0) {
+        return foundVideos[0]
+    }
+}
 
-//     const {data: inserted_summary, error_inserted_summary} = await client
-//             .from('summaries')
-//             .select('id')
-//             .eq('video_id', video_id)
-//             .eq('length', length)
-//             .single()
 
-//     // if user is logged in insert user_summary
-//     if(user) {
-//         await client.from('user_summaries').insert([
-//             {user_id: user.id, summary_id: inserted_summary.id}
-//         ])
-//     }
+async function handleUserVideoInsert(client: any, videoId: string, user: any) {
+    // insert url into db if it does not yet exist
+    if(user.data.user) {
+        const {data: foundUserVideos, error} = await client
+            .from('user_videos')
+            .select('id')
+            .eq('user_id', user.data.id)
+            .eq('video_id', videoId)
+        if (error) {
+            throw new Error('handleUserVideoInsert() error ' + error.message)
+        }
+        if(foundUserVideos.length == 0) {
+            await client.from('user_videos').insert([
+                {user_id: user.data.id, video_id: videoId}
+            ])
+        }
+    }
+}
 
-//     return {
-//         statusCode: 200,
-//         headers: {
-//             'content-type': 'application/json',
-//         },
-//         body: JSON.stringify({summary_id: inserted_summary.id}),
-//     }
 
-//   })
+async function handleSummaryInsert(client: any, videoId: string, length: number, type: string, user: any) {
+    
+
+    const summary = await client.from('summaries').insert([
+        {video_id: videoId, length: length, type: type}
+    ])
+
+    return summary
+}
+
+async function handleUserSummaryInsert(client: any, summaryId: string, user: any) {
+
+    if(user.data.user.id) {
+        const {data: foundUserSummaries, error} = await client
+            .from('user_summaries')
+            .select('id')
+            .eq('user_id', user.data.user.id)
+            .eq('summary_id', summaryId)
+        if (error) {
+            throw new Error('handleUserSummaryInsert() error 2' + error.message)
+        }
+        if(foundUserSummaries.length == 0) {
+            await client.from('user_summaries').insert([
+                {user_id: user.data.user.id, summary_id: summaryId}
+            ])
+        }
+    }
+}

@@ -2,42 +2,47 @@ import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
 
-    const client = await serverSupabaseClient(event)
-    const body = await readBody(event)
+    try{
+        const client = await serverSupabaseClient(event)
+        const body = await readBody(event)
 
-    const user = await client.auth.user()
-    if(user){
-        return {
-            statusCode: 400,
-            headers: {
-                'content-type': 'application/json',
-            },
-            body: {message: 'User already logged in'},
-        }
-    }
-    else {
-        const { email, password } = JSON.parse(body)
-        const { user, session, error } = await client.auth.signUp({
-            email,
-            password,
-        })
-        if(error){
+        const user = await client.auth.getUser()
+        if(user.data.user){
             return {
                 statusCode: 400,
                 headers: {
                     'content-type': 'application/json',
                 },
-                body: error,
+                body: {message: "User already logged in"},
             }
         }
         else {
+            const { email, password } = body
+            const { data, error } = await client.auth.signUp({
+                email,
+                password,
+            })
+            if(error){
+                throw new Error('handleSingUp() error ' + error.message)
+            }
+            else {
+                return {
+                    statusCode: 200,
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: {user: data.user, session: data.session},
+                }
+            }
+        }
+    }
+    catch(error: any) {
             return {
-                statusCode: 200,
+                statusCode: 500,
                 headers: {
                     'content-type': 'application/json',
                 },
-                body: { user, session },
+                body: {message: error.message},
             }
-        }
     }
   })

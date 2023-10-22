@@ -2,31 +2,51 @@ import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
 
-    const client = await serverSupabaseClient(event)
-    const body = await readBody(event)
+    try{
+        const client = await serverSupabaseClient(event)
 
-    const user = await client.auth.user()
+        const user = await client.auth.getUser()
 
-    const {data: summary, error} = await client
-        .from('summaries')
-        .select('*')
-        .eq('id', body.pathParameters.id)
-    
-    if(summary.length == 0){
+        const id = event.context.params.id
+        const summary = await handleSummaryRetrieval(client, id)    
+        if(summary.length == 0){
+            return {
+                statusCode: 404,
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: {message: 'Summary not found'},
+            }
+        }
+
         return {
-            statusCode: 404,
+            statusCode: 200,
             headers: {
                 'content-type': 'application/json',
             },
-            body: {message: 'Summary not found'},
+            body: {summary: summary[0]},
         }
     }
-
-    return {
-        statusCode: 200,
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: summary,
+            
+    catch(error: any) {
+        return {
+            statusCode: 500,
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: {message: error.message},
+        }
     }
   })
+
+async function handleSummaryRetrieval(client: any, id: string) {
+    const {data: summary, error} = await client
+        .from('summaries')
+        .select('*')
+        .eq('id', id)
+    if(error) {
+        throw new Error('handleSummaryRetrieval() error ' + error.message)
+    }
+    return summary
+}
+
