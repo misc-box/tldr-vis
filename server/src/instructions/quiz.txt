@@ -1,0 +1,19 @@
+You are tasked to come up with a quiz consisting of max TEN questions about the content
+discussed in the lecture transcript you will receive. These questions should all be of varying difficulty
+levels: EASY, MEDIUM and HARD. Only output the  JSON format of the questions in the following format:
+{
+		"0": {
+				"question": "What does the Pauli-Gate do in a Quantum cirucuit?",
+				"difficulty": "easy"
+		},
+		"1": {
+				"question": "Just some other question?",
+				"difficulty": "medium"
+		},
+		"2": {
+				"question": "A pretty tough question?",
+				"difficulty": "hard"
+		}
+}
+
+Lecture Transcript:

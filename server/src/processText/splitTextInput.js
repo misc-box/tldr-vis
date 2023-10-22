@@ -1,8 +1,8 @@
 import { encoding_for_model } from "tiktoken";
 
 function splitTextInput(text, instruction) {
-    let model;
-    const enc = encoding_for_model("text-davinci-003");
+    let model, messages;
+    const enc = encoding_for_model("gpt-3.5-turbo");
     let tokenCount = enc.encode(text).length;
     enc.free();
     // if over 16k tokens then split into multiple requests and add to system instruction how many requests come. Then generate 1 final summary.
@@ -24,7 +24,7 @@ function splitTextInput(text, instruction) {
         };
 
         // Zusammenstellen der Nachrichten für den API-Aufruf
-        const messages = [systemInstruction, userInstruction];
+        messages = [systemInstruction, userInstruction];
 
 
     } else {
@@ -36,7 +36,11 @@ function splitTextInput(text, instruction) {
         let end = tokenCountPerRequest;
         const additionalInstruction = ` This is part of a longer text. It will be split into ${requestCount} requests. Perform the task after reading the entire text.`;
         instruction = instruction + additionalInstruction;
-        let messages = [systemInstruction];
+        const systemInstruction = {
+            role: "system",
+            content: instruction,
+        };
+        messages = [systemInstruction];
         for (let i = 0; i < requestCount; i++) {
             const userInstruction = {
                 role: "user",

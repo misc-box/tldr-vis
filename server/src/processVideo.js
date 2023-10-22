@@ -10,11 +10,11 @@ import { promises as fs } from 'fs';
 import convertVideoToMp3 from './convertVideoToMp3.js';
 import saveSummaryToPDF from './processText/saveSummaryToPDF.js';
 // Import the functions
+import { splitMp3 } from './convertVideoToMp3.js';
 import extractTopics from './processText/extractTopics.js';
 import readTextFile from './processText/readTextFile.js';
 import summarizeText from './processText/summarizeTranscription.js';
 import writeTextFile from './processText/writeTextFile.js';
-
 import { transcribeAudio } from './transcribeAudio.js';
 async function processVideo(videoUrl, length = 'short', mock = false) {
     try {
@@ -32,30 +32,33 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
             // TODO: Check if video link is valid
             // TODO: Check if video was already processed
             const audioPath = await convertVideoToMp3(videoUrl, `audio-${timestamp}`);
-            //const audioPath = "/Users/magnusmuller/Developer/visconHackathon/tldr-vis/tmp/audio-1697937009639"
+            //const audioPath = "/Users/magnusmuller/Developer/visconHackathon/tldr-vis/test_data/Audio-long.mp3"
 
+            // Split the MP3 file into segments
+            console.log('Audio path:', audioPath);  // Log the audio path for debugging
+            const segmentsDir = await splitMp3(audioPath);
+            console.log('Segments directory:', segmentsDir);  // Log the segments directory for debugging
 
+            // Transcribe the audio segments
+            transcription = await transcribeAudio(segmentsDir);
+            console.log('Transcription:', transcription);  // Log the transcription for debugging
             console.log('Needed time in seconds to convert video to audio:', (Date.now() - current) / 1000);
             current = Date.now();
 
-            transcription = await transcribeAudio(audioPath);
-            console.log('Needed time in seconds to transcribe audio:', (Date.now() - current) / 1000);
-            current = Date.now();
+            outputTranscription = `${outputFolder}/transcription-${timestamp}.txt`;
+            await writeTextFile(outputTranscription, transcription);
 
             // delete audio file    
             try {
-                await fs.rmdir(audioPath, { recursive: true });
+                await fs.rmdir(segmentsDir, { recursive: true });
             } catch (error) {
                 console.error('Error in processing video:', error.message);
-                throw error;
             }
-            outputTranscription = `${outputFolder}/transcription-${timestamp}.txt`;
-            await writeTextFile(outputTranscription, transcription);
 
         } else {
             console.log('Using mock data');
             // read sample transcription file to save api calls
-            outputTranscription = `./test_data/transcription-123.txt`;
+            outputTranscription = `/Users/magnusmuller/Developer/visconHackathon/tldr-vis/server/output/transcription-long.txt`;
             transcription = await readTextFile(`${outputTranscription}`);
         }
 
