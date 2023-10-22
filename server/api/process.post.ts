@@ -7,7 +7,7 @@ import PDFKit from "pdfkit";
 import saveAsPDF from "../src/saveSummaryToPDF";
 import { randomUUID } from "crypto";
 import os from "os";
-<<<<<<< Updated upstream
+import { serverSupabaseClient } from '#supabase/server'
 
 function sleep(seconds) {
   return new Promise(resolve => setTimeout(resolve, seconds * 1000));
@@ -27,10 +27,6 @@ async function stream2buffer(stream: Stream): Promise<Buffer> {
     });
 } 
 
-=======
-import { serverSupabaseClient } from '#supabase/server'
->>>>>>> Stashed changes
-
 export default defineEventHandler(async event => {
     const { length, videoUrl } = await readBody(event);
 
@@ -46,11 +42,7 @@ export default defineEventHandler(async event => {
 
     await saveAsPDF(transcriptTextBuffer, result.transcriptionPath + "-tmp")
 
-<<<<<<< Updated upstream
     const transcriptBuffer = await fs.readFile(path.resolve(result.transcriptionPath + "-tmp.pdf"));
-=======
-    const transcriptBuffer = fs.readFileSync(path.resolve(result.transcriptionPath + "-tmp.pdf"));
->>>>>>> Stashed changes
 
     const newRes = {
         ...result,
