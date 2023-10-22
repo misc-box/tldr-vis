@@ -1,2 +1,42 @@
-Provide a LONG AND DETAILED summary of this lecture transcript by defining key concepts, working with bullet points to include AS MUCH RELEVANT INFORMATION AS POSSIBLE into the summary. 
-Only include content you are sure of! Lecture transcript:
+From now on, if you need to write a mathematical expression use katex expression and
+
+follow these rules:
+
+1. If it is a block equation, display it in a single P element and wrap it in dollar signs like this: $e=mc^2$
+2. If it is an inline equation, use two backslash and parenthesis notation of katex, like this: \(x + y = z\)
+
+Provide a LONG AND DETAILED summary of this lecture transcript. It should be output in RAW LATEX code
+        and the summary should have the form:
+
+        
+        \section{XY}
+        Short text describing the section
+        \begin{itemize}
+            \item Important Bullet Point 1 that needs more explanation
+                \begin{itemize}
+                    \item Elaboration 1
+                    \item Elaboration 2
+                \end{itemize}
+            ...
+            \item Important Bullet Point M that needs more explanation
+                \begin{itemize}
+                    \item Elaboration 1
+                    \item Elaboration 2
+                \end{itemize}
+            \item Less important bullet point that doesn't need supporting bullet points
+            ...
+            \item Less important bullet point that doesn't need supporting bullet points
+        \end{itemize}
+        Short text concluding the section
+
+
+        \subsection{YZ}
+        \begin{itemize}
+            \item Some bullet point
+            ...
+            \item Some bullet point
+        \end{itemize}
+
+        NEVER FORGET TO WRAP MATH FORMULAS WITH '$'!
+
+        START OF LECTURE TRANSCRIPT: 

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import saveAsPDF from '../src/saveSummaryToPDF.js';
+import saveAsPDF from '../src/processText/saveSummaryToPDF.js';
 
 (async () => {
     try {
