@@ -1,51 +1,3 @@
-<!-- 
-<script setup lang="ts">
-const summaryData = ref({});
-const loading = ref(false);
-
-const route = useRoute();
-
-const client = useSupabaseClient();
-
-let start = async () => {
-    do {
-        let { data, error } = await client.from('global_summaries').select('*').eq("id", route.path).single();
-        console.log(data);
-        if (error !== null || data === null || data.result === null) throw error;
-        loading.value = data.result.loading !== undefined; // always true/false
-    } while (!loading.value);
-    summaryData.value = data.result;
-
-    return data;
-};
-
-function base64ToArrayBuffer(base64: string): Uint8Array {
-    var binaryString = window.atob(base64);
-    var binaryLen = binaryString.length;
-    var bytes = new Uint8Array(binaryLen);
-    for (var i = 0; i < binaryLen; i++) {
-        var ascii = binaryString.charCodeAt(i);
-        bytes[i] = ascii;
-    }
-    return bytes;
-}
-
-function saveByteArray(reportName: string, byte: string) {
-    var blob = new Blob([base64ToArrayBuffer(byte)], { type: "application/pdf" });
-    var link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    var fileName = reportName;
-    link.download = fileName;
-    link.click();
-}
-
-const { JOKES_API_KEY } = useRuntimeConfig().public;
-
-const { data: jokes } = useFetch("https://api.api-ninjas.com/v1/jokes?limit=1", {
-    headers: { "X-Api-Key": JOKES_API_KEY },
-});
-</script> -->
-
 <template>
     <div class="flex flex-col justify-center items-center w-full">
         <div class="mt-44 animate-pulse flex flex-col items-center gap-2">
@@ -67,7 +19,7 @@ const i = setInterval(async () => {
 
     if (!loading_info?.value?.data?.result?.info) {
         clearInterval(i);
-        navigateTo(`/summaries/processed/${route.path.split('/').at(-1)}`);
+        window.location.href = (`/summaries/processed/${route.path.split('/').at(-1)}`);
     }
 }, 100);
 
