@@ -1,7 +1,7 @@
 
 
 import saveSummaryToPDF from './saveSummaryToPDF.js';
-import {promises as fs} from 'fs';
+import { promises as fs } from 'fs';
 // Import the functions
 import convertVideoToMp3 from './convertVideoToMp3.js';
 import extractTopics from './extractTopics.js';
@@ -15,14 +15,22 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
         // timestamp
         const timestamp = Date.now();
         let current = timestamp;
-        const outputFolder = path.resolve('./server/output');
 
+        const path = './server/output';
 
-        try {
-            await fs.stat(outputFolder)
-        } catch (e) {
-            await fs.mkdir(outputFolder);
+        // Check if the folder exists
+        if (!fs.existsSync(path)) {
+            // If it doesn't exist, create it
+            try {
+                fs.mkdirSync(path, { recursive: true });
+                console.log('Folder created successfully');
+            } catch (err) {
+                console.error('Error creating the folder:', err);
+            }
+        } else {
+            console.log('Folder already exists');
         }
+
 
         let transcription, outputTranscription;
 
@@ -35,7 +43,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
 
             console.log('Needed time in seconds to convert video to audio:', (Date.now() - current) / 1000);
             current = Date.now();
-            
+
             transcription = await transcribeAudio(audioPath);
             console.log('Needed time in seconds to transcribe audio:', (Date.now() - current) / 1000);
             current = Date.now();
