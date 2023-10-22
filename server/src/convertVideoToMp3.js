@@ -5,24 +5,26 @@ import path from 'path'; // Import the path module here
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+
+
+const tempDir = path.join('.', 'tmp');
+
+
 async function convertVideoToMp3(videoUrl, name) {
     return new Promise((resolve, reject) => {
-        const audioDir = path.join('tmp', name);
-        if (!fs.existsSync(audioDir)) {
-            fs.mkdirSync(audioDir, { recursive: true });
+        const timestamp = Date.now();
+        //create temp directory if it doesn't exist
+        if (!fs.existsSync(tempDir)) {
+            fs.mkdirSync(tempDir);
         }
         const outputPath = path.join(tempDir, `${name}.mp3`);
         console.log('outputPath:', outputPath);
         ffmpeg(videoUrl)
             .format('mp3')
-            .audioBitrate('64k')
-            .outputOptions([
-                '-f segment',
-                '-segment_time 3600',
-                '-reset_timestamps 1',
-            ])
             .on('error', reject)
-            .on('end', () => resolve(audioDir))
+            .on('end', () => resolve(outputPath))
             .save(outputPath);
     });
 }

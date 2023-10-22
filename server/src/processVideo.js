@@ -36,10 +36,13 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
 
             // Split the MP3 file into segments
             console.log('Audio path:', audioPath);  // Log the audio path for debugging
+
+            console.log('Starting to split audio file')
             const segmentsDir = await splitMp3(audioPath);
             console.log('Segments directory:', segmentsDir);  // Log the segments directory for debugging
 
             // Transcribe the audio segments
+            console.log('Starting to transcribe audio segments')
             transcription = await transcribeAudio(segmentsDir);
             console.log('Transcription:', transcription);  // Log the transcription for debugging
             console.log('Needed time in seconds to convert video to audio:', (Date.now() - current) / 1000);
