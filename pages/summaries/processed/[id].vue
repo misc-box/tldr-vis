@@ -108,7 +108,7 @@
                         </div>
 
                         <div v-else-if="item.key === 'quiz'">
-                            <Quiz />
+                            <Quiz :transcript="summary.data.transcript" />
                         </div>
                     </UCard>
                 </template>
