@@ -14,7 +14,7 @@ let start = async () => {
         if (error !== null || data === null || data.result === null) throw error;
         loading.value = data.result.loading !== undefined; // always true/false
     } while (!loading.value);
-    summaryData.value = data.result;
+    summaryData = data.result;
 
     return data;
 };
@@ -49,7 +49,7 @@ const { data: jokes } = useFetch("https://api.api-ninjas.com/v1/jokes?limit=1", 
 <template>
     <div class="flex flex-col justify-center items-center w-full">
 
-        <div v-if="!loading" class="lg:w-[1000px] my-10">
+        <div class="lg:w-[1000px] my-10">
             <UCard>
                 <UCard class="mx-4">
                     <div class="flex gap-2">
@@ -63,11 +63,11 @@ const { data: jokes } = useFetch("https://api.api-ninjas.com/v1/jokes?limit=1", 
                             </div>
                             <div class="flex gap-2">
                                 <UButton icon="i-heroicons-arrow-down" size="lg"
-                                    @click="saveByteArray('summary.pdf', summaryData.value.summaryBuf)">
+                                    @click="saveByteArray('summary.pdf', summaryData.summaryBuf)">
                                     <span class="font-semibold">Download Now</span>
                                 </UButton>
                                 <UButton icon="i-heroicons-newspaper" color="gray" size="lg"
-                                    @click="saveByteArray('transcript.pdf', summaryData.value.transcriptBuf)">
+                                    @click="saveByteArray('transcript.pdf', summaryData.transcriptBuf)">
                                     <span class="font-semibold">Download Transcript</span>
                                 </UButton>
                             </div>
@@ -131,34 +131,17 @@ const { data: jokes } = useFetch("https://api.api-ninjas.com/v1/jokes?limit=1", 
                 </div>
             </UCard>
         </div>
-        <div v-else class="mt-44 animate-pulse flex flex-col items-center gap-2">
-            <img src="../../assets/images/book.png" class="w-36 h-32 animate-bounce" />
-            <div class="text-3xl">Processing, this might take a while...</div>
-            <UAlert v-if="jokes" class="mt-4" icon="i-heroicons-face-smile" title="Here's a joke while you wait!"
-                variant="subtle" color="primary" :description="jokes[0].joke" />
-        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-const summaryData = ref({});
-const loading = ref(true);
-
 const route = useRoute();
 
 const client = useSupabaseClient();
 
-const { data: summary, refresh } = await useAsyncData('summary', async () => {
-    if (!loading.value) return;
+const { data } = await useAsyncData('summary_processed', () => client.from('global_summaries').select('*').eq("id", route.path.split('/').at(-1)).single());
 
-    let { data, error } = await client.from('global_summaries').select('*').eq("id", route.path.split('/').at(-1)).single();
-
-    if (error !== null || data === null || data.result === null) throw error;
-    summaryData.value = data.result;
-    loading.value = data.result.loading !== undefined; // always true/false
-
-    return data;
-});
+const summaryData = data.value.data.result;
 
 function base64ToArrayBuffer(base64: string): Uint8Array {
     var binaryString = window.atob(base64);

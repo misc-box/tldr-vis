@@ -3,22 +3,16 @@ import { serverSupabaseClient } from '#supabase/server'
 export default defineEventHandler(async (event) => {
 
     const client = await serverSupabaseClient(event)
-    const body = await readBody(event)
 
-    const user = await client.auth.user()
+    const { data: summary, error } = await client.from('global_summaries').select('*').eq("id", atob(event.context.params.id)).single();
 
-    const {data: summary, error} = await client
-        .from('summaries')
-        .select('*')
-        .eq('id', body.pathParameters.id)
-    
-    if(summary.length == 0){
+    if (summary === null || summary === undefined) {
         return {
             statusCode: 404,
             headers: {
                 'content-type': 'application/json',
             },
-            body: {message: 'Summary not found'},
+            body: { message: 'Summary not found' },
         }
     }
 
@@ -29,4 +23,4 @@ export default defineEventHandler(async (event) => {
         },
         body: summary,
     }
-  })
+})
