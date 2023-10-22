@@ -17,27 +17,15 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
         const timestamp = Date.now();
         let current = timestamp;
 
-        const path = './server/output';
+        const outputFolder = './server/output';
 
         try {
-            await fsPromises.access(path)
+            await fsPromises.access(outputFolder)
         } catch (e) {
             // Creating new: 
             console.log('create directory')
-            fs.mkdirSync(path, { recursive: true });
+            fs.mkdirSync(outputFolder, { recursive: true });
         }
-
-        // Check if the folder exists
-        if (!fs.existsSync(path)) {
-            // If it doesn't exist, create it
-            try {
-            } catch (err) {
-                console.error('Error creating the folder:', err);
-            }
-        } else {
-            console.log('Folder already exists');
-        }
-
 
         let transcription, outputTranscription;
 
