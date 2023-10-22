@@ -21,7 +21,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
         // timestamp
         const timestamp = Date.now();
         let current = timestamp;
-        const outputFolder = './server/output';
+        const outputFolder = path.resolve('./server/output');
         if ((await fs.stat(outputFolder)) === null) {
             await fs.mkdir(outputFolder);
         }

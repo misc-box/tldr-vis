@@ -9,7 +9,7 @@
                 </h1>
             </div>
             <NewSummary @summarize="onSummarize" />
-            <UAlert variant="subtle" title="">
+            <UAlert variant="subtle" title="" class="mt-10">
                 <template #description>
                     <div class="flex items-center gap-2 justify-between mb-1">
                         <div class="flex items-center gap-2">
