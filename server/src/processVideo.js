@@ -9,12 +9,13 @@ import readTextFile from './readTextFile.js';
 import summarizeTranscription from './summarizeTranscription.js';
 import transcribeAudio from './transcribeAudio.js';
 import writeTextFile from './writeTextFile.js';
+import path from 'path';
 async function processVideo(videoUrl, length = 'short', mock = false) {
     try {
         // timestamp
         const timestamp = Date.now();
         let current = timestamp;
-        const outputFolder = './server/output';
+        const outputFolder = path.resolve('./server/output');
         if ((await fs.stat(outputFolder)) === null) {
             await fs.mkdir(outputFolder);
         }
