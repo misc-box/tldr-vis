@@ -18,12 +18,18 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
 
         const path = './server/output';
 
+        try {
+            await fs.access(path)
+        } catch (e) {
+            // Creating new: 
+            console.log('create directory')
+            fs.mkdirSync(path, { recursive: true });
+        }
+
         // Check if the folder exists
         if (!fs.existsSync(path)) {
             // If it doesn't exist, create it
             try {
-                fs.mkdirSync(path, { recursive: true });
-                console.log('Folder created successfully');
             } catch (err) {
                 console.error('Error creating the folder:', err);
             }
