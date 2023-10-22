@@ -46,7 +46,7 @@ type Lecture = { name: string, date: Date, lecturer: string, link: URL, duration
 /// path should be the path of the url in the url box (without the base) or the whole url
 ///
 /// sends cookie if given, some lectures are 'protected'
-async function get_lecture_by_url(path: string, cookies?: string): Promise<Lecture> {
+async function get_lecture_by_url(path: string, cookies?: string): Promise<any> {
     const path_prefix = path.split('.').slice(0, -1).join('.');
     const video_url = new URL(`${path_prefix}.series-metadata.json`, BASE_URL);
 
@@ -56,12 +56,12 @@ async function get_lecture_by_url(path: string, cookies?: string): Promise<Lectu
         json = await res.json();
     } catch (e) {
         // "invalid" lecture (html doesn't exist too, e. g. /lectures/d-math/2019/autumn/401-0261-g0l/0c1c661c-bbf4-4899-9c40-7aa1e2483c5b.html)
-        return null;
+        return { key: path, value: null };
     }
 
     if (json.protection === 'PWD' || !json.authorized) {
         // console.log('Not authorized: ' + JSON.stringify(json, null, 4));
-        return null;
+        return { key: path, value: null };
     }
 
 
@@ -74,9 +74,9 @@ async function get_lecture_by_url(path: string, cookies?: string): Promise<Lectu
     links.sort((v1, v2) => v1.resolution - v2.resolution);
 
     // e.g. on podcasts there are `.mp4`
-    if (links.length === 0) return null;
+    if (links.length === 0) return { key: path, value: null };
 
-    return { name: name, lecturer: lecturer, date: date, link: links[0].link, duration: Math.floor(moment.duration(selected.duration).asMilliseconds() / 1000) };
+    return { key: path, value: { name: name, lecturer: lecturer, date: date, link: links[0].link, duration: Math.floor(moment.duration(selected.duration).asMilliseconds() / 1000) } };
 }
 
 /// the question mark (`?`) seems to return all lectures
@@ -135,7 +135,7 @@ async function main() {
     let links = JSON.parse(fs.readFileSync('links.json'));
 
     let processes = [];
-    let video_links: Lecture[] = JSON.parse(fs.readFileSync('video-links.json'));
+    let video_links: any[] = JSON.parse(fs.readFileSync('video-links.json'));
     if (process.env.ETH_USERNAME === undefined || process.env.ETH_PASSWORD === undefined) console.warn('No credentials, only downloading unprotected videos.');
     let cookies = await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD);
 
@@ -164,8 +164,7 @@ async function main() {
     }
     // let videos = await Promise.all(links.map(async l => await video_link_by_lecture_id(l, await get_cookies(process.env.ETH_USERNAME, process.env.ETH_PASSWORD))));
     console.timeEnd();
-    video_links = video_links.filter(l => l !== null);
-    video_links.sort((a, b) => a.duration - b.duration);
+    // video_links.sort((a, b) => a.value.duration - b.value.duration);
     fs.writeFileSync('video-links.json', JSON.stringify(video_links));
 }
 
