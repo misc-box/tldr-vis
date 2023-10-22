@@ -1,33 +1,15 @@
 import FuzzySet from 'fuzzyset.js';
 import fetch from 'node-fetch';
 import readTextFile from './readTextFile.js';
-
+import splitTextInput from './splitTextInput.js';
 const { OPENAI_API_KEY } = useRuntimeConfig();
 
 async function extractTopics(text, otherOptions = {}) {
     // Define system instruction
-    const systemInstruction = {
-        role: "system",
-        content: await readTextFile('server/src/instructions//extractTopics.txt')
-    };
+    let instruction = await readTextFile('server/src/instructions//extractTopics.txt');
 
-    // Define user instruction
-    const userInstruction = {
-        role: "user",
-        content: text
-    };
-
-    // Assemble messages for API call
-    const messages = [systemInstruction, userInstruction];
-
-    // Choose model based on token length
-    let model = 'gpt-3.5-turbo';
-    const wordCount = text.split(/\s+/).length;
-    if (wordCount > 2800) {
-        model = 'gpt-3.5-turbo-16k';
-    }
-    console.log('Word count:', wordCount);
-    console.log('Model:', model);
+    let model, messages;
+    ({ model, messages } = splitTextInput(text, instruction));
 
     // Execute API call
     const response = await fetch('https://api.openai.com/v1/chat/completions', {

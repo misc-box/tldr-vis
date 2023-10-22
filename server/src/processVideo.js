@@ -1,14 +1,14 @@
 
 
-import saveSummaryToPDF from './saveSummaryToPDF.js';
-import {promises as fs} from 'fs';
+import { promises as fs } from 'fs';
+import saveSummaryToPDF from './processText/saveSummaryToPDF.js';
 // Import the functions
 import convertVideoToMp3 from './convertVideoToMp3.js';
-import extractTopics from './extractTopics.js';
-import readTextFile from './readTextFile.js';
-import summarizeTranscription from './summarizeTranscription.js';
+import extractTopics from './processText/extractTopics.js';
+import readTextFile from './processText/readTextFile.js';
+import summarizeTranscription from './processText/summarizeText.js';
+import writeTextFile from './processText/writeTextFile.js';
 import transcribeAudio from './transcribeAudio.js';
-import writeTextFile from './writeTextFile.js';
 async function processVideo(videoUrl, length = 'short', mock = false) {
     try {
         // timestamp
@@ -29,7 +29,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
 
             console.log('Needed time in seconds to convert video to audio:', (Date.now() - current) / 1000);
             current = Date.now();
-            
+
             transcription = await transcribeAudio(audioPath);
             console.log('Needed time in seconds to transcribe audio:', (Date.now() - current) / 1000);
             current = Date.now();

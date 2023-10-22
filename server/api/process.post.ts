@@ -1,22 +1,19 @@
 import { Stream } from "form-data";
-import processVideo from "../src/processVideo";
 import fs from "fs/promises";
 import path from "path";
+import processVideo from "../src/processVideo";
 // @ts-ignore
-import PDFKit from "pdfkit";
-import saveAsPDF from "../src/saveSummaryToPDF";
-import { randomUUID } from "crypto";
-import os from "os";
+import saveAsPDF from "../src/processText/saveSummaryToPDF";
 
 function sleep(seconds) {
-  return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 }
 
 
 async function stream2buffer(stream: Stream): Promise<Buffer> {
 
     return new Promise((resolve, reject) => {
-        
+
         let buffer = [];
 
         stream.on("data", chunk => buffer.push(chunk));
@@ -24,16 +21,16 @@ async function stream2buffer(stream: Stream): Promise<Buffer> {
         stream.on("error", err => reject(`error converting stream - ${err}`));
 
     });
-} 
+}
 
 
 export default defineEventHandler(async event => {
     const { length, videoUrl } = await readBody(event);
-    
+
     const result = await processVideo(videoUrl, length);
 
     console.log(result.pdfPath);
-    
+
     const summaryBuffer = await fs.readFile(result.pdfPath);
 
     const transcriptTextBuffer = await fs.readFile(result.transcriptionPath, 'utf-8');

@@ -1,5 +1,5 @@
-import extractTopics from '../src/extractTopics.js'; // Update with the correct path to your extractTopics file
-import readTextFile from '../src/readTextFile.js';
+import extractTopics from '../src/processText/extractTopics.js'; // Update with the correct path to your extractTopics file
+import readTextFile from '../src/processText/readTextFile.js';
 async function testExtractTopics() {
     try {
         // Load the text from the transcription file

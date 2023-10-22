@@ -1,4 +1,4 @@
-import summarizeText from '../src/summarizeTranscription.js';
+import summarizeText from '../src/processText/summarizeText.js';
 
 
 

@@ -1,8 +1,8 @@
 
 import fetch from 'node-fetch';
-import readTextFile from './readTextFile.js'
-import { get_encoding, encoding_for_model } from "tiktoken";
 
+import readTextFile from './readTextFile.js';
+import splitTextInput from './splitTextInput.js';
 const { OPENAI_API_KEY } = useRuntimeConfig();
 
 async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
@@ -22,34 +22,16 @@ async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
             throw new Error('Invalid summary length');
 
     }
-    const systemInstruction = {
-        role: "system",
-        content: instruction,
-    };
-    // Definieren der Benutzeranweisung
-    const userInstruction = {
-        role: "user",
-        content: text,
-    };
 
-    // Zusammenstellen der Nachrichten für den API-Aufruf
-    const messages = [systemInstruction, userInstruction];
 
     // Weitere benutzerdefinierte Optionen können hier hinzugefügt werden, z.B.:
     // const temperature = otherOptions.temperature || 0.7;
 
     // Ausführen des API-Aufrufs
     // choose the model based on token length, if more than 3800 use the gpt-3.5-turbo-16k else use the gpt-3.5-turbo
-    let model = 'gpt-3.5-turbo';
-    const enc = encoding_for_model("text-davinci-003");
-    let tokenCount = enc.encode(text).length;
-    enc.free();
+    let model, messages;
+    ({ model, messages } = splitTextInput(text, instruction));
 
-    if (tokenCount > 4096) {
-        model = 'gpt-3.5-turbo-16k';
-    }
-    console.log('Token count:', tokenCount);
-    console.log('Model:', model);
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -63,6 +45,7 @@ async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
             // temperature: temperature,  // Falls erforderlich
         })
     });
+
 
     // Auswertung der Antwort
     const data = await response.json();
