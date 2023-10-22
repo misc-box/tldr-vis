@@ -24,13 +24,9 @@
                         <UIcon name="i-heroicons-sparkles" class="w-5 h-5 text-green-300" />
                         <span class="font-semibold text-green-300">AI's Answer: </span>
                     </div>
-                    <code class="h-64 overflow-auto"
-                        >Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem corrupti earum
-                        ipsam? Magnam consequuntur omnis nam impedit ullam eius, ipsam nulla beatae! Dolorem
-                        ab rem culpa, non ad rerum itaque facilis nostrum recusandae dolor harum magni
-                        distinctio perspiciatis vel quia suscipit aliquam corrupti incidunt! Error quam ex
-                        repellat qui corporis?</code
-                    >
+                    <code class="h-64 overflow-auto">
+                        {{ data }}
+                    </code>
                 </UCard>
             </div>
         </UCard>
@@ -38,8 +34,16 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ question: string; isOpen: boolean }>();
-const { question } = props;
+const props = defineProps<{ question: string; isOpen: boolean; transcript: string }>();
+const { question, transcript } = props;
+
+const { data } = useFetch("/api/chat", {
+    method: "POST",
+    body: {
+        transcript,
+        question
+    },
+})
 
 const isModalOpen = toRef(props, "isOpen");
 

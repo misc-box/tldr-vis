@@ -17,8 +17,6 @@
                     <UCard>
                         <div v-if="item.key === 'overview'">
                             <div class="flex gap-2 mx-4 mb-3">
-                                <!-- <UButton @click="saveByteArray('summary.pdf', summary.data.result.value.summaryBuf)" label="Summary" icon="i-heroicons-arrow-down" />
-                                <UButton @click="saveByteArray('transcript.pdf', summary.data.result.value.transcriptBuf)" label="Transcript" icon="i-heroicons-arrow-down" color="gray" /> -->
                                 <h1 class="text-2xl font-semibold flex items-center gap-2 justify-between w-full">
                                     <div class="flex gap-2 items-center">
                                         <span>Your summary has been generated:</span>
@@ -38,7 +36,6 @@
                             </div>
                             <div class="flex justify-between pt-4">
                                 <h1 class="px-4 text-xl font-semibold">🔑 Key Topics</h1>
-                                <!-- <span>Hashtags: {{ summary.data.result.value.hashtags }}</span> -->
                             </div>
                             <div class="flex flex-col gap-2 overflow-auto max-h-xl p-4">
                                 <div v-for="topic in summary.data.result.topics" class="flex flex-col gap-3">
@@ -91,6 +88,7 @@
                                                                 icon="i-heroicons-sparkles"
                                                                 @click="isQnAOpen[topic.question] = true" />
                                                             <QnAPopup @close="isQnAOpen[topic.question] = false"
+                                                                :transcript="summary.data.transcript"
                                                                 :isOpen="isQnAOpen[topic.question]"
                                                                 :question="topic.question" />
                                                         </div>
@@ -169,12 +167,3 @@ const { data: jokes } = useFetch("https://api.api-ninjas.com/v1/jokes?limit=1", 
     headers: { "X-Api-Key": JOKES_API_KEY },
 });
 </script>
-<!-- 
-<script lang="ts">
-export default {
-    mounted() {
-        start();
-        alert('t');
-    }
-}
-</script> -->
