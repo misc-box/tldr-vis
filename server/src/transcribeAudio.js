@@ -3,9 +3,8 @@ import FormData from 'form-data';
 import fs from 'fs';
 import path from 'path';
 
-import config from './config.js';
-//const { OPENAI_API_KEY } = useRuntimeConfig();
-const { OPENAI_API_KEY } = config;
+const { OPENAI_API_KEY } = useRuntimeConfig();
+//const { OPENAI_API_KEY } = config;
 
 async function sendToWhisper(audioFile) {
     const formData = new FormData();

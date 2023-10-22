@@ -1,12 +1,11 @@
 
 import fetch from 'node-fetch';
 
-import config from './../config.js';
 import readTextFile from './readTextFile.js';
 import splitTextInput from './splitTextInput.js';
 
-//const { OPENAI_API_KEY } = useRuntimeConfig();
-const { OPENAI_API_KEY } = config;
+const { OPENAI_API_KEY } = useRuntimeConfig();
+//const { OPENAI_API_KEY } = config;
 async function summarizeText(text, summaryLength = 'short', otherOptions = {}) {
     // Definieren der Systemanweisung
     let instruction = '';
