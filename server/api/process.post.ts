@@ -15,7 +15,7 @@ import { transcribeAudio } from "../src/transcribeAudio";
 import convertVideoToMp3, { splitMp3 } from "../src/convertVideoToMp3";
 
 function sleep(seconds) {
-  return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 }
 
 
@@ -27,6 +27,25 @@ async function stream2buffer(stream: Stream): Promise<Buffer> {
         stream.on("end", () => resolve(Buffer.concat(buffer)));
         stream.on("error", (err) => reject(`error converting stream - ${err}`));
     });
+}
+
+async function setLoadingStatus(client: any, videoUrl: string, status: string): Promise<void> {
+
+    // @ts-ignore
+    const { error } = await client.from("global_summaries").update([
+        {
+            id: btoa(new URL(videoUrl).pathname),
+            video: null,
+            transcript: null,
+            result: { loading: true, info: status },
+        }
+    ]).eq('id', btoa(new URL(videoUrl).pathname))
+
+
+    if (error) {
+        console.log("COULD NOT WRITE TO DB WTF BRO??????")
+        console.log(error.message)
+    }
 }
 
 export default defineEventHandler((event) => {
