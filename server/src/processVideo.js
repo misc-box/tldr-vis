@@ -16,9 +16,17 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
         const timestamp = Date.now();
         let current = timestamp;
         const outputFolder = path.resolve('./server/output');
+
+        console.log('stat')
+        console.log((await fs.stat(outputFolder)))
+        console.log('....')
+
         if ((await fs.stat(outputFolder)) === null) {
             await fs.mkdir(outputFolder);
         }
+
+
+
         let transcription, outputTranscription;
 
         // mock to save api calls
