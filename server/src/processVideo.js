@@ -1,14 +1,21 @@
-
+/**
+ * The `transcribeAudio` function transcribes audio files using the OpenAI Whisper API.
+ * @param audioDir - The `audioDir` parameter is the directory path where the audio files are located.
+ * The function will transcribe all the audio files present in this directory.
+ * @returns The function `transcribeAudio` is returning an array of transcriptions. Each transcription
+ * corresponds to an audio file in the specified folder.
+ */
 
 import { promises as fs } from 'fs';
+import convertVideoToMp3 from './convertVideoToMp3.js';
 import saveSummaryToPDF from './processText/saveSummaryToPDF.js';
 // Import the functions
-import convertVideoToMp3 from './convertVideoToMp3.js';
 import extractTopics from './processText/extractTopics.js';
 import readTextFile from './processText/readTextFile.js';
-import summarizeTranscription from './processText/summarizeText.js';
+import summarizeText from './processText/summarizeTranscription.js';
 import writeTextFile from './processText/writeTextFile.js';
-import transcribeAudio from './transcribeAudio.js';
+
+import { transcribeAudio } from './transcribeAudio.js';
 async function processVideo(videoUrl, length = 'short', mock = false) {
     try {
         // timestamp
@@ -25,6 +32,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
             // TODO: Check if video link is valid
             // TODO: Check if video was already processed
             const audioPath = await convertVideoToMp3(videoUrl, `audio-${timestamp}`);
+            //const audioPath = "/Users/magnusmuller/Developer/visconHackathon/tldr-vis/tmp/audio-1697937009639"
 
 
             console.log('Needed time in seconds to convert video to audio:', (Date.now() - current) / 1000);
@@ -36,7 +44,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
 
             // delete audio file    
             try {
-                await fs.unlink(audioPath);
+                await fs.rmdir(audioPath, { recursive: true });
             } catch (error) {
                 console.error('Error in processing video:', error.message);
                 throw error;
@@ -51,7 +59,7 @@ async function processVideo(videoUrl, length = 'short', mock = false) {
             transcription = await readTextFile(`${outputTranscription}`);
         }
 
-        const summary = await summarizeTranscription(transcription, length);
+        const summary = await summarizeText(transcription, length);
         const pdfSummary = await saveSummaryToPDF(summary, `${outputFolder}/summary-${timestamp}`);
         console.log('Needed time in seconds to summarize transcription:', (Date.now() - current) / 1000);
         current = Date.now();

@@ -1,8 +1,11 @@
 import FuzzySet from 'fuzzyset.js';
 import fetch from 'node-fetch';
+import config from './../config.js';
 import readTextFile from './readTextFile.js';
 import splitTextInput from './splitTextInput.js';
-const { OPENAI_API_KEY } = useRuntimeConfig();
+//const { OPENAI_API_KEY } = useRuntimeConfig();
+const { OPENAI_API_KEY } = config;
+
 
 async function extractTopics(text, otherOptions = {}) {
     // Define system instruction
