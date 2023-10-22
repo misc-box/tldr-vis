@@ -91,6 +91,7 @@
                                                                 icon="i-heroicons-sparkles"
                                                                 @click="isQnAOpen[topic.question] = true" />
                                                             <QnAPopup @close="isQnAOpen[topic.question] = false"
+                                                                :transcript="summary.data.transcript"
                                                                 :isOpen="isQnAOpen[topic.question]"
                                                                 :question="topic.question" />
                                                         </div>

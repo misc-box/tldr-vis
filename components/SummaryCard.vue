@@ -10,7 +10,7 @@
                     <pre>{{ new Date(summary.created_at).toLocaleDateString() }}</pre>
                 </span>
                 <div class="flex gap-2 mt-2 max-w-md overflow-auto no-scrollbar">
-                    <UBadge v-for="tag in summary.result.topics.hashtags" :label="`#${tag.replaceAll(' ', '')}`" variant="soft" />
+                    <!-- <UBadge v-for="tag in summary.result.topics.hashtags" :label="`#${tag.replaceAll(' ', '')}`" variant="soft" /> -->
                 </div>
             </div>
             <UIcon name="i-heroicons-chevron-right" class="w-12 h-12 opacity-50" />
