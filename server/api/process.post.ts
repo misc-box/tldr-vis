@@ -7,6 +7,8 @@ import processVideo from "../src/processVideo";
 import saveAsPDF from "../src/processText/saveSummaryToPDF";
 
 
+import { serverSupabaseClient } from '#supabase/server';
+
 function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 }
@@ -26,8 +28,6 @@ async function stream2buffer(stream: Stream): Promise<Buffer> {
 }
 
 
-import { serverSupabaseClient } from '#supabase/server';
-
 
 export default defineEventHandler(async event => {
     const { length, videoUrl } = await readBody(event);
@@ -44,7 +44,7 @@ export default defineEventHandler(async event => {
 
     await saveAsPDF(transcriptTextBuffer, result.transcriptionPath + "-tmp")
 
-    const transcriptBuffer = fs.readFileSync(path.resolve(result.transcriptionPath + "-tmp.pdf"));
+    const transcriptBuffer = await fs.readFile(path.resolve(result.transcriptionPath + "-tmp.pdf"));
 
     const newRes = {
         ...result,
