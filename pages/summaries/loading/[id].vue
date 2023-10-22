@@ -63,11 +63,14 @@ const route = useRoute();
 const client = useSupabaseClient();
 var { data: loading_info, refresh } = await useAsyncData('summary_loading', () => client.from('global_summaries').select('*').eq("id", route.path.split('/').at(-1)).single());
 
-setInterval(async () => {
+const i = setInterval(async () => {
     await refresh();
 
-    if (loading_info.value.data.loading !== false) window.location.href = (`/summaries/processed/${route.path.split('/').at(-1)}`);
-}, 1000);
+    if (loading_info.value.data.result.info === undefined || loading_info.value.data.result.info === null) {
+        clearInterval(i);
+        window.location.href = (`/summaries/processed/${route.path.split('/').at(-1)}`);
+    }
+}, 100);
 
 function base64ToArrayBuffer(base64: string): Uint8Array {
     var binaryString = window.atob(base64);

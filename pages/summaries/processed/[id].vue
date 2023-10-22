@@ -1,6 +1,6 @@
 <!-- 
 <script setup lang="ts">
-const summaryData = ref({});
+const summary.data.result = ref({});
 const loading = ref(false);
 
 const route = useRoute();
@@ -14,7 +14,7 @@ let start = async () => {
         if (error !== null || data === null || data.result === null) throw error;
         loading.value = data.result.loading !== undefined; // always true/false
     } while (!loading.value);
-    summaryData = data.result;
+    summary.data.result = data.result;
 
     return data;
 };
@@ -63,11 +63,11 @@ const { data: jokes } = useFetch("https://api.api-ninjas.com/v1/jokes?limit=1", 
                             </div>
                             <div class="flex gap-2">
                                 <UButton icon="i-heroicons-arrow-down" size="lg"
-                                    @click="saveByteArray('summary.pdf', summaryData.summaryBuf)">
+                                    @click="saveByteArray('summary.pdf', summary.data.result.summaryBuf)">
                                     <span class="font-semibold">Download Now</span>
                                 </UButton>
                                 <UButton icon="i-heroicons-newspaper" color="gray" size="lg"
-                                    @click="saveByteArray('transcript.pdf', summaryData.transcriptBuf)">
+                                    @click="saveByteArray('transcript.pdf', summary.data.result.transcriptBuf)">
                                     <span class="font-semibold">Download Transcript</span>
                                 </UButton>
                             </div>
@@ -78,7 +78,7 @@ const { data: jokes } = useFetch("https://api.api-ninjas.com/v1/jokes?limit=1", 
                     <h1 class="px-4 text-xl font-semibold">🔑 Key Topics</h1>
                 </div>
                 <div class="flex flex-col gap-2 overflow-auto max-h-xl p-4">
-                    <div v-for="topic in summaryData.topics" class="flex flex-col gap-3">
+                    <div v-for="topic in summary.data.result.topics" class="flex flex-col gap-3">
                         <UCard v-if="topic.name">
                             <div class="mt-2">
                                 <span class="truncate font-semibold text-lg">{{ topic.name }}</span>
@@ -139,9 +139,7 @@ const route = useRoute();
 
 const client = useSupabaseClient();
 
-const { data } = await useAsyncData('summary_processed', () => client.from('global_summaries').select('*').eq("id", route.path.split('/').at(-1)).single());
-
-const summaryData = data.value.data.result;
+const { data: summary } = await useAsyncData('summary_processed', () => client.from('global_summaries').select('*').eq("id", route.path.split('/').at(-1)).single());
 
 function base64ToArrayBuffer(base64: string): Uint8Array {
     var binaryString = window.atob(base64);

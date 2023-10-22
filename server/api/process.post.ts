@@ -59,14 +59,14 @@ export default defineEventHandler(event => {
                 id: btoa(new URL(videoUrl).pathname),
                 video: null,
                 transcript: null,
-                result: { loading: true, info: 'starting' },
+                result: { loading: true, info: 'Starting ... (1/8)' },
             }
         ])
 
 
         if (error) {
-            console.log("COULD NOT WRITE TO DB WTF BRO??????")
-            console.log(error.message)
+            // already in database
+            return;
         }
 
         try {
@@ -81,14 +81,14 @@ export default defineEventHandler(event => {
 
             // TODO: Check if video link is valid
             // TODO: Check if video was already processed
-            setLoadingStatus(client, videoUrl, 'converting to `.mp3`');
+            setLoadingStatus(client, videoUrl, 'Converting to `.mp3` ... (2/8)');
             const audioPath = await convertVideoToMp3(videoUrl, `audio-${timestamp}`);
 
 
             console.log('Needed time in seconds to convert video to audio:', (Date.now() - current) / 1000);
             current = Date.now();
 
-            setLoadingStatus(client, videoUrl, 'transcribing audio');
+            setLoadingStatus(client, videoUrl, 'Transcribing Audio ... (3/8)');
             transcription = await transcribeAudio(audioPath);
             console.log('Needed time in seconds to transcribe audio:', (Date.now() - current) / 1000);
             current = Date.now();
@@ -101,19 +101,19 @@ export default defineEventHandler(event => {
                 throw error;
             }
             outputTranscription = `${outputFolder}/transcription-${timestamp}.txt`;
-            setLoadingStatus(client, videoUrl, 'save transcription');
+            setLoadingStatus(client, videoUrl, 'Saving Transcription ... (4/8)');
             await writeTextFile(outputTranscription, transcription);
 
 
-            setLoadingStatus(client, videoUrl, 'summarizing');
+            setLoadingStatus(client, videoUrl, 'Summarizing ... (5/8)');
 
             const summary = await summarizeTranscription(transcription, length);
-            setLoadingStatus(client, videoUrl, 'saving summary');
+            setLoadingStatus(client, videoUrl, 'Saving Summary ... (6/8)');
             const pdfSummary = await saveSummaryToPDF(summary, `${outputFolder}/summary-${timestamp}`);
             console.log('Needed time in seconds to summarize transcription:', (Date.now() - current) / 1000);
             current = Date.now();
 
-            setLoadingStatus(client, videoUrl, 'extracting topics');
+            setLoadingStatus(client, videoUrl, 'Extracting Topics ... (7/8)');
             // extract topics
             const topics = await extractTopics(transcription);
             console.log('Needed time in seconds to extract topics:', (Date.now() - current) / 1000);
@@ -126,7 +126,7 @@ export default defineEventHandler(event => {
 
 
 
-            setLoadingStatus(client, videoUrl, 'saving as pdf');
+            setLoadingStatus(client, videoUrl, 'Saving As Pdf ... (8/8)');
 
             console.log(result.pdfPath);
 
@@ -153,7 +153,7 @@ export default defineEventHandler(event => {
                     result: newRes,
                 }
             ]).eq("id", btoa(new URL(videoUrl).pathname))
-            console.log('done');
+
             if (error2) {
                 console.log("COULD NOT WRITE TO DB WTF BRO??????")
                 console.log(error2.message)
